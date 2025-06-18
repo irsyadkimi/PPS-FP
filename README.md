@@ -236,6 +236,100 @@ docker-compose logs -f frontend
 docker-compose restart
 ```
 
+📦 DOCKER ARCHITECTURE:
+┌─────────────────────────────────────────────────────────┐
+│                  DOCKER COMPOSE                        │
+│                                                         │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐   │
+│  │   FRONTEND   │ │   BACKEND    │ │   MONGODB    │   │
+│  │  React:3000  │ │ Express:5000 │ │    :27017    │   │
+│  │              │ │              │ │              │   │
+│  │   Vite +     │ │  Node.js +   │ │   Mongo 7.0  │   │
+│  │   React      │ │  Express     │ │   + InitDB   │   │
+│  └──────────────┘ └──────────────┘ └──────────────┘   │
+│         │                 │                 │         │
+│         └─────────────────┼─────────────────┘         │
+│                           │                           │
+│               ┌───────────▼──────────┐                │
+│               │    SHARED NETWORK    │                │
+│               │   diet-app-network   │                │
+│               └──────────────────────┘                │
+└─────────────────────────────────────────────────────────┘
+🎯 SERVICES YANG RUNNING:
+
+MongoDB Container
+
+Port: 27017
+Auto-initialized dengan sample data
+Persistent volume untuk data
+
+
+Backend Container
+
+Port: 5000
+Express.js + all SOA services
+Health checks built-in
+
+
+Frontend Container
+
+Port: 3000
+React + Vite
+Production build ready
+
+
+
+🚀 QUICK START:
+bash# Clone/setup project
+git clone <your-repo>
+cd PPS-FP
+
+# ONE COMMAND DEPLOYMENT
+docker-compose up --build -d
+
+# Check status
+docker-compose ps
+
+# View logs
+docker-compose logs -f
+
+# Access
+# Frontend: http://localhost:3000
+# Backend:  http://localhost:5000  
+# Health:   http://localhost:5000/health
+📋 DOCKER COMPOSE FEATURES:
+
+✅ Multi-service orchestration
+✅ Automatic service dependencies
+✅ Shared networking
+✅ Volume persistence
+✅ Health checks
+✅ Environment configuration
+✅ Auto-restart policies
+✅ Build caching
+
+🛠️ MANAGEMENT COMMANDS:
+bash# Start services
+docker-compose up -d
+
+# Stop services  
+docker-compose down
+
+# Restart services
+docker-compose restart
+
+# View logs
+docker-compose logs -f backend
+docker-compose logs -f frontend
+
+# Scale services (if needed)
+docker-compose up --scale backend=2
+
+# Clean rebuild
+docker-compose down --volumes
+docker-compose up --build -d
+
+
 ## 🚀 Deployment
 
 Aplikasi siap di-deploy dengan Docker Compose:
