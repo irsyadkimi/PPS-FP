@@ -1,4 +1,4 @@
-# Backend Dockerfile
+# Backend Dockerfile - Fixed
 FROM node:18-alpine
 
 # Set working directory
@@ -6,7 +6,9 @@ WORKDIR /app
 
 # Install dependencies first (for better caching)
 COPY package*.json ./
-RUN npm ci --only=production
+
+# Fix: Use npm install instead of npm ci untuk regenerate lock file
+RUN npm install --only=production && npm cache clean --force
 
 # Copy application code
 COPY . .
