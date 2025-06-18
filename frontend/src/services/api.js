@@ -1,97 +1,139 @@
-// API services untuk komunikasi dengan backend
-const API_BASE_URL = 'http://localhost:5000/api/v1';
+// frontend/src/services/api.js
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-// Helper function untuk handle API response
-const handleApiResponse = async (response) => {
-  const data = await response.json();
-  
-  if (!response.ok) {
-    throw new Error(data.message || `HTTP error! status: ${response.status}`);
-  }
-  
-  return data;
+// API utility functions
+export const apiUtils = {
+  formatResponse: (data) => data,
+  handleError: (error) => {
+    console.error('API Error:', error);
+    if (error.response) {
+      return {
+        error: true,
+        message: error.response.data?.message || 'Server error occurred',
+        status: error.response.status
+      };
+    }
+    return {
+      error: true,
+      message: error.message || 'Network error occurred',
+      status: 0
+    };
+  },
+  validateResponse: (response) => {
+    return response && response.data;
+  },
+  createHeaders: () => ({
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  })
 };
 
-// Submit assessment data ke backend
-export const submitAssessment = async (assessmentData) => {
-  try {
-    console.log('Sending assessment data:', assessmentData);
-    
-    const response = await fetch(`${API_BASE_URL}/assessment`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(assessmentData),
-    });
+// Assessment API functions
+export const assessmentAPI = {
+  // Submit assessment
+  submitAssessment: async (assessmentData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/assessment`, {
+        method: 'POST',
+        headers: apiUtils.createHeaders(),
+        body: JSON.stringify(assessmentData)
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Assessment submission failed');
+      }
+      
+      return data;
+    } catch (error) {
+      return apiUtils.handleError(error);
+    }
+  },
 
-    const result = await handleApiResponse(response);
-    console.log('Assessment result:', result);
-    
-    return result;
-  } catch (error) {
-    console.error('Error submitting assessment:', error);
-    throw new Error(`Gagal mengirim asesmen: ${error.message}`);
+  // Get recommendations
+  getRecommendations: async (userId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/recommendation/${userId}`, {
+        method: 'GET',
+        headers: apiUtils.createHeaders()
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to get recommendations');
+      }
+      
+      return data;
+    } catch (error) {
+      return apiUtils.handleError(error);
+    }
+  },
+
+  // Get assessment history
+  getAssessmentHistory: async (userId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/assessment/history/${userId}`, {
+        method: 'GET',
+        headers: apiUtils.createHeaders()
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to get assessment history');
+      }
+      
+      return data;
+    } catch (error) {
+      return apiUtils.handleError(error);
+    }
+  },
+
+  // Update user preferences
+  updateUserPreferences: async (userId, preferences) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/user/preferences/${userId}`, {
+        method: 'PUT',
+        headers: apiUtils.createHeaders(),
+        body: JSON.stringify(preferences)
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to update preferences');
+      }
+      
+      return data;
+    } catch (error) {
+      return apiUtils.handleError(error);
+    }
   }
 };
 
-// Get recommendation berdasarkan user ID
-export const getRecommendation = async (userId) => {
-  try {
-    console.log('Getting recommendation for user:', userId);
-    
-    const response = await fetch(`${API_BASE_URL}/recommendation/${userId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const result = await handleApiResponse(response);
-    console.log('Recommendation result:', result);
-    
-    return result;
-  } catch (error) {
-    console.error('Error getting recommendation:', error);
-    throw new Error(`Gagal mengambil rekomendasi: ${error.message}`);
+// Health check function
+export const healthAPI = {
+  checkHealth: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/health`, {
+        method: 'GET',
+        headers: apiUtils.createHeaders()
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Health check failed');
+      }
+      
+      return data;
+    } catch (error) {
+      return apiUtils.handleError(error);
+    }
   }
 };
 
-// Get assessment history berdasarkan user ID
-export const getAssessmentHistory = async (userId) => {
-  try {
-    console.log('Getting assessment history for user:', userId);
-    
-    const response = await fetch(`${API_BASE_URL}/assessment/history/${userId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const result = await handleApiResponse(response);
-    console.log('Assessment history:', result);
-    
-    return result;
-  } catch (error) {
-    console.error('Error getting assessment history:', error);
-    throw new Error(`Gagal mengambil riwayat asesmen: ${error.message}`);
-  }
-};
-
-// Health check backend
-export const healthCheck = async () => {
-  try {
-    const response = await fetch(`http://localhost:5000/health`, {
-      method: 'GET',
-    });
-
-    const result = await handleApiResponse(response);
-    console.log('Health check result:', result);
-    
-    return result;
-  } catch (error) {
-    console.error('Error in health check:', error);
-    throw new Error(`Backend tidak dapat diakses: ${error.message}`);
-  }
-};
+// Default export
+export default assessmentAPI;
