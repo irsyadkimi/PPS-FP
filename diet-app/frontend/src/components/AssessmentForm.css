@@ -1,0 +1,249 @@
+/* AssessmentForm styles sesuai wireframe */
+.assessment-form {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Step Progress */
+.step-progress {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.step-number.active {
+  background: #5a67d8;
+  color: white;
+}
+
+.step-line {
+  width: 60px;
+  height: 2px;
+  background: #e2e8f0;
+  margin: 0 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.step-line.completed {
+  background: #5a67d8;
+}
+
+/* Form Container */
+.form-container {
+  min-height: 400px;
+}
+
+.form-step {
+  text-align: center;
+}
+
+.form-step h3 {
+  color: #2d3748;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.form-step p {
+  color: #64748b;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #5a67d8;
+  box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.1);
+}
+
+.form-group input.error {
+  border-color: #e53e3e;
+}
+
+.error-text {
+  color: #e53e3e;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Options Grid */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.option-button {
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  color: #2d3748;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.option-button:hover {
+  border-color: #5a67d8;
+  background: #f7fafc;
+}
+
+.option-button.selected {
+  border-color: #5a67d8;
+  background: #5a67d8;
+  color: white;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-prev, .btn-next, .btn-cancel, .btn-submit {
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 1rem;
+}
+
+.btn-prev, .btn-cancel {
+  background: #f7fafc;
+  color: #2d3748;
+  border: 2px solid #e2e8f0;
+}
+
+.btn-prev:hover, .btn-cancel:hover {
+  background: #edf2f7;
+}
+
+.btn-next, .btn-submit {
+  background: #5a67d8;
+  color: white;
+  min-width: 120px;
+}
+
+.btn-next:hover, .btn-submit:hover {
+  background: #4c51bf;
+  transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Confirmation Step */
+.confirmation-step {
+  padding: 2rem 0;
+}
+
+.confirmation-step h3 {
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.confirmation-step p {
+  color: #64748b;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+/* Single button in first step */
+.form-actions:has(.btn-next:only-child) {
+  justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .assessment-form {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .step-progress {
+    margin-bottom: 1.5rem;
+  }
+  
+  .step-number {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
+  
+  .step-line {
+    width: 40px;
+  }
+  
+  .options-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .btn-prev, .btn-next, .btn-cancel, .btn-submit {
+    width: 100%;
+  }
+}
