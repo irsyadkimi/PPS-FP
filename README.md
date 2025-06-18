@@ -2,7 +2,7 @@
 
 🥗 **Aplikasi Asesmen Diet untuk Personalisasi Makanan**
 
-Aplikasi web untuk melakukan asesmen diet dan memberikan rekomendasi makanan sehat yang dipersonalisasi berdasarkan kondisi kesehatan, tujuan diet, dan preferensi pengguna.
+Aplikasi web sederhana untuk melakukan asesmen diet dan memberikan rekomendasi makanan sehat berdasarkan input pengguna.
 
 ## 👨‍🎓 Author
 **Fausta Irsyad Ramadhan**  
@@ -12,171 +12,146 @@ Mata Kuliah: Pemrograman Perangkat Sistem
 
 ## 📋 Features
 
-- ✅ **Assessment Form**: Form asesmen lengkap (umur, berat, tinggi, tujuan diet, riwayat penyakit)
-- ✅ **Diet Analysis**: Analisis BMI dan rekomendasi diet berdasarkan input pengguna
-- ✅ **Personalized Recommendations**: Rekomendasi makanan dan paket diet yang sesuai
-- ✅ **Responsive Design**: UI yang responsif untuk desktop dan mobile
-- ✅ **RESTful API**: Backend API dengan endpoint lengkap
-- ✅ **Docker Support**: Containerized deployment dengan Docker Compose
-- ✅ **SOA Architecture**: Service-Oriented Architecture implementation
+- ✅ **Assessment Form**: Form asesmen (umur, berat, tinggi, tujuan diet, riwayat penyakit)
+- ✅ **Diet Analysis**: Analisis BMI sederhana dan rekomendasi diet
+- ✅ **Simple UI**: Interface yang mudah digunakan
+- ✅ **Docker Support**: Deployment dengan Docker Compose
 
 ## 🏗️ Architecture
 
-Aplikasi ini menggunakan **Service-Oriented Architecture (SOA)** dengan pemisahan yang jelas antara frontend dan backend:
-
-### Services Identification
-1. **AssessmentFormService** - Menyediakan form asesmen
-2. **ValidationService** - Validasi input data
-3. **DietAnalysisService** - Analisis data dan rekomendasi
-4. **RecommendationService** - Pengelolaan paket makanan
-5. **AssessmentHistoryService** - Histori asesmen pengguna
-6. **UserProfileService** - Manajemen profil pengguna
-
-### Frontend
-- **Framework**: Vite + JavaScript/HTML/CSS
-- **Port**: 3000
-- **Features**: 
-  - Multi-step assessment form
-  - Real-time form validation
-  - Results dashboard
-  - Responsive UI design
+Aplikasi menggunakan arsitektur **frontend-backend sederhana**:
 
 ### Backend
 - **Framework**: Express.js + Node.js
 - **Port**: 5000
-- **Features**:
-  - RESTful API endpoints
-  - Assessment data processing
-  - BMI calculation
-  - Recommendation engine
+- **Database**: MongoDB (opsional)
+- **Endpoints**:
+  - `POST /api/v1/assessment` - Submit asesmen
+  - `GET /api/v1/recommendation/:userid` - Get rekomendasi
+
+### Frontend
+- **Framework**: React + Vite
+- **Port**: 3000
+- **Components**:
+  - `AssessmentForm.jsx` - Form input asesmen
+  - `ResultDisplay.jsx` - Tampilan hasil
+  - `HomePage.jsx` - Halaman utama
+  - `AssessmentPage.jsx` - Halaman asesmen
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Docker & Docker Compose
-- Node.js 18+ (for local development)
+- Node.js 18+ (untuk development)
 
-### 1. Extract and Setup
+### 1. Extract dan Setup
 ```bash
-# Extract the application
+# Extract aplikasi
 tar -xzf diet-app.tar.gz
 cd diet-app
 
-# Or run the setup script
+# Atau jalankan setup script
 chmod +x setup.sh
 ./setup.sh
 ```
 
-### 2. Run with Docker Compose
+### 2. Jalankan dengan Docker
 ```bash
-# Start all services
+# Start semua services
 docker-compose up --build -d
 
-# Check status
+# Cek status
 docker-compose ps
 
-# View logs
+# Lihat logs
 docker-compose logs backend
 docker-compose logs frontend
 ```
 
-### 3. Access Application
+### 3. Akses Aplikasi
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:5000
-- **Health Check**: http://localhost:5000/health
 
 ## 📡 API Endpoints
 
-### Health Check
-```
-GET /health
+### Assessment Endpoint
+```bash
+POST /api/v1/assessment
+Content-Type: application/json
+
+{
+  "age": 25,
+  "weight": 70,
+  "height": 170,
+  "goal": "Diet",
+  "diseases": ["Diabetes"]
+}
 ```
 
-### Assessment Endpoints
+### Recommendation Endpoint
+```bash
+GET /api/v1/recommendation/:userid
 ```
-GET  /api/v1/assessment/form       # Get form structure
-POST /api/v1/assessment/validate   # Validate input data
-POST /api/v1/assessment/analyze    # Analyze assessment data
-GET  /api/v1/assessment/recommendation # Get food recommendations
-```
-
-### Service Routing Table
-| Route ID | Service | Endpoint | Method | Description |
-|----------|---------|----------|---------|-------------|
-| 1 | AssessmentFormService | `/api/v1/assessment/form` | GET | Form asesmen |
-| 2 | ValidationService | `/api/v1/assessment/validate` | POST | Validasi input |
-| 3 | DietAnalysisService | `/api/v1/assessment/analyze` | POST | Analisis diet |
-| 4 | RecommendationService | `/api/v1/assessment/recommendation` | GET | Rekomendasi makanan |
 
 ## 🗂️ Project Structure
 
 ```
-pps/
-├── diet-app/                 # Main application directory
-│   ├── frontend/            # Frontend application
-│   │   ├── src/            # Source code
-│   │   ├── public/         # Static assets
-│   │   ├── package.json    # Frontend dependencies
-│   │   └── Dockerfile.frontend
-│   ├── backend/            # Backend services (optional)
-│   ├── docker-compose.yml  # Docker services configuration
-│   ├── Dockerfile.backend  # Backend container
-│   └── package.json       # Backend dependencies
-├── diet-app.tar.gz         # Compressed application
-├── setup.sh               # Setup script
-└── README.md              # This documentation
+diet-app/
+├── backend/
+│   ├── app.js                    # Main server file
+│   ├── routes/
+│   │   └── assessmentRoutes.js   # API routes
+│   ├── controllers/
+│   │   └── assessmentController.js # Business logic
+│   ├── models/
+│   │   └── assessmentModel.js    # Database schema
+│   ├── services/
+│   │   └── dietLogic.js          # Diet recommendation logic
+│   ├── db/
+│   │   └── connection.js         # Database connection
+│   ├── package.json              # Backend dependencies
+│   └── Dockerfile                # Backend container
+├── frontend/
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── AssessmentForm.jsx
+│   │   │   └── ResultDisplay.jsx
+│   │   ├── pages/
+│   │   │   ├── HomePage.jsx
+│   │   │   └── AssessmentPage.jsx
+│   │   ├── services/
+│   │   │   └── api.js             # API calls
+│   │   ├── App.jsx               # Main app component
+│   │   └── main.jsx              # Entry point
+│   ├── package.json              # Frontend dependencies
+│   ├── vite.config.js            # Vite configuration
+│   └── Dockerfile                # Frontend container
+├── docker-compose.yml            # Docker services
+└── README.md                     # This file
 ```
 
-## 📊 Use Case: Asesmen Diet untuk Personalisasi Makanan
+## 📊 Flow Aplikasi
 
-### Main Flow
-1. User login ke sistem
-2. User mengisi form asesmen (umur, berat, tinggi, tujuan diet, riwayat penyakit)
-3. Sistem memvalidasi kelengkapan data
-4. Sistem memproses data untuk menentukan tipe diet yang cocok
-5. Sistem menampilkan hasil asesmen dan rekomendasi
-6. User dapat memilih paket makanan sesuai rekomendasi
-
-### Business Process Diagram
-Aplikasi mengikuti alur proses bisnis yang sistematis dengan validasi di setiap tahap dan memberikan hasil personalisasi berdasarkan input pengguna.
-
-## 🏥 Health Conditions Supported
-
-- ✅ Diabetes
-- ✅ Hipertensi (High Blood Pressure)
-- ✅ Kolesterol Tinggi
-- ✅ Asam Urat
-- ✅ Goals: Diet, Massa Otot, Hidup Sehat
-
-## 📈 Performance Metrics
-
-### Assessment Process
-- **Throughput**: 13.57 assessment/hari
-- **Yield**: 79.17% (95 dari 120 pengguna menyelesaikan assessment)
-
-### Food Ordering Process  
-- **Throughput**: 12.86 pemesanan/hari
-- **Yield**: 90% (90 dari 100 pesanan berhasil diproses)
-
-## 🛠️ Technology Stack
-
-- **Frontend**: Vite, HTML5, CSS3, JavaScript
-- **Backend**: Node.js, Express.js
-- **Containerization**: Docker, Docker Compose
-- **Architecture**: Service-Oriented Architecture (SOA)
-- **API**: RESTful API design
+1. **User Input**: Pengguna mengisi form asesmen di `AssessmentForm`
+2. **Validation**: Frontend validasi input dasar
+3. **API Call**: Data dikirim ke backend via `POST /api/v1/assessment`
+4. **Processing**: Backend proses data dengan logic sederhana di `dietLogic.js`
+5. **BMI Calculation**: Hitung BMI = weight / (height/100)²
+6. **Recommendation**: Generate rekomendasi berdasarkan BMI dan goal
+7. **Display**: Hasil ditampilkan di `ResultDisplay` component
 
 ## 🔧 Development
 
-### Local Development Setup
+### Local Development
 ```bash
-# Install backend dependencies
-npm install express cors body-parser
+# Backend
+cd backend
+npm install
+npm start
 
-# Start backend
-node static_server.js
-
-# Start frontend (in another terminal)
+# Frontend (terminal baru)
 cd frontend
 npm install
 npm run dev
@@ -186,52 +161,89 @@ npm run dev
 ```bash
 # Backend
 PORT=5000
-NODE_ENV=development
+MONGODB_URI=mongodb://localhost:27017/dietapp
 
 # Frontend
-VITE_BACKEND_URL=http://localhost:5000
+VITE_API_URL=http://localhost:5000
+```
+
+## 🏥 Health Assessment Logic
+
+### BMI Categories:
+- **Underweight**: BMI < 18.5
+- **Normal**: BMI 18.5-24.9
+- **Overweight**: BMI 25-29.9
+- **Obese**: BMI ≥ 30
+
+### Goals Supported:
+- **Diet**: Fokus penurunan berat badan
+- **Massa Otot**: Fokus penambahan massa otot
+- **Hidup Sehat**: Maintenance berat badan ideal
+
+### Disease Considerations:
+- **Diabetes**: Rekomendasi rendah gula
+- **Hipertensi**: Rekomendasi rendah garam
+- **Kolesterol**: Rekomendasi rendah lemak jenuh
+- **Asam Urat**: Hindari makanan tinggi purin
+
+## 🛠️ Technology Stack
+
+- **Frontend**: React, Vite, CSS
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB (opsional)
+- **Deployment**: Docker, Docker Compose
+
+## 📦 Dependencies
+
+### Backend
+```json
+{
+  "express": "^4.18.2",
+  "mongoose": "^7.5.0",
+  "cors": "^2.8.5",
+  "dotenv": "^16.3.1"
+}
+```
+
+### Frontend
+```json
+{
+  "react": "^18.2.0",
+  "react-dom": "^18.2.0",
+  "react-router-dom": "^6.15.0",
+  "@vitejs/plugin-react": "^4.0.3",
+  "vite": "^4.4.5"
+}
 ```
 
 ## 🐛 Troubleshooting
 
-### Common Issues
-1. **Port Conflicts**: Ensure ports 3000 and 5000 are available
-2. **Docker Issues**: Run `docker-compose down` then `docker-compose up --build`
-3. **Module Errors**: Run `npm install` in respective directories
+### Common Issues:
+1. **Port sudah digunakan**: Kill process dengan `lsof -ti:3000 | xargs kill -9`
+2. **Docker error**: Restart dengan `docker-compose down && docker-compose up --build`
+3. **API tidak connect**: Cek backend running di port 5000
 
-### Quick Fixes
+### Debug Commands:
 ```bash
-# Kill processes on ports
-lsof -ti:3000 | xargs kill -9
-lsof -ti:5000 | xargs kill -9
+# Cek container status
+docker-compose ps
 
-# Restart Docker services
+# Lihat logs
+docker-compose logs -f backend
+docker-compose logs -f frontend
+
+# Restart services
 docker-compose restart
-
-# View logs
-docker-compose logs -f
 ```
-
-## 📝 Documentation
-
-Project ini dilengkapi dengan:
-- Use case diagram dan description
-- Business process diagram
-- Granular actions table
-- Service identification dan routing table
-- Arsitektur SOA lengkap
 
 ## 🚀 Deployment
 
-Aplikasi ini siap untuk deployment menggunakan Docker Compose. Untuk production:
+Aplikasi siap di-deploy dengan Docker Compose:
 
-1. Pastikan Docker dan Docker Compose terinstall
-2. Clone repository ini
-3. Jalankan `docker-compose up --build -d`
-4. Akses aplikasi pada port yang dikonfigurasi
+1. Clone repository
+2. Jalankan `docker-compose up --build -d`
+3. Akses aplikasi di port yang dikonfigurasi
 
 ---
 
-**🎯 Goal**: Memberikan rekomendasi diet yang dipersonalisasi melalui asesmen kesehatan yang komprehensif dan analisis data yang akurat.
-
-**📊 Result**: Sistem SOA yang scalable dan modular untuk asesmen diet dengan tingkat keberhasilan tinggi dalam memberikan rekomendasi yang sesuai dengan kebutuhan pengguna.
+**🎯 Goal**: Aplikasi asesmen diet sederhana dengan rekomendasi yang dipersonalisasi berdasarkan BMI, tujuan diet, dan kondisi kesehatan pengguna.
