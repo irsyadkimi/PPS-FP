@@ -1,5 +1,5 @@
-# Frontend Dockerfile
-FROM node:18-alpine as build
+# Frontend Dockerfile - Fixed
+FROM node:18-alpine AS build
 
 # Set working directory
 WORKDIR /app
@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Fix: Use npm install instead of npm ci
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM node:18-alpine as production
+FROM node:18-alpine AS production
 
 # Install serve globally
 RUN npm install -g serve
@@ -37,9 +37,9 @@ USER nodejs
 # Expose port
 EXPOSE 3000
 
-# Health check
+# Health check (remove curl dependency, use wget)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3000 || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000 || exit 1
 
 # Start the application
 CMD ["serve", "-s", "dist", "-l", "3000"]
