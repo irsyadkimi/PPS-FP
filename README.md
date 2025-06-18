@@ -236,7 +236,9 @@ docker-compose logs -f frontend
 docker-compose restart
 ```
 
-📦 DOCKER ARCHITECTURE:
+## 📦 **DOCKER ARCHITECTURE**
+
+```
 ┌─────────────────────────────────────────────────────────┐
 │                  DOCKER COMPOSE                        │
 │                                                         │
@@ -255,32 +257,29 @@ docker-compose restart
 │               │   diet-app-network   │                │
 │               └──────────────────────┘                │
 └─────────────────────────────────────────────────────────┘
-🎯 SERVICES YANG RUNNING:
+```
 
-MongoDB Container
+## 🎯 **SERVICES YANG RUNNING**
 
-Port: 27017
-Auto-initialized dengan sample data
-Persistent volume untuk data
+### **MongoDB Container**
+- Port: 27017
+- Auto-initialized dengan sample data
+- Persistent volume untuk data
 
+### **Backend Container**
+- Port: 5000
+- Express.js + all SOA services
+- Health checks built-in
 
-Backend Container
+### **Frontend Container**
+- Port: 3000
+- React + Vite
+- Production build ready
 
-Port: 5000
-Express.js + all SOA services
-Health checks built-in
+## 🚀 **QUICK START**
 
-
-Frontend Container
-
-Port: 3000
-React + Vite
-Production build ready
-
-
-
-🚀 QUICK START:
-bash# Clone/setup project
+```bash
+# Clone/setup project
 git clone <your-repo>
 cd PPS-FP
 
@@ -297,19 +296,23 @@ docker-compose logs -f
 # Frontend: http://localhost:3000
 # Backend:  http://localhost:5000  
 # Health:   http://localhost:5000/health
-📋 DOCKER COMPOSE FEATURES:
+```
 
-✅ Multi-service orchestration
-✅ Automatic service dependencies
-✅ Shared networking
-✅ Volume persistence
-✅ Health checks
-✅ Environment configuration
-✅ Auto-restart policies
-✅ Build caching
+## 📋 **DOCKER COMPOSE FEATURES**
 
-🛠️ MANAGEMENT COMMANDS:
-bash# Start services
+- ✅ Multi-service orchestration
+- ✅ Automatic service dependencies  
+- ✅ Shared networking
+- ✅ Volume persistence
+- ✅ Health checks
+- ✅ Environment configuration
+- ✅ Auto-restart policies
+- ✅ Build caching
+
+## 🛠️ **MANAGEMENT COMMANDS**
+
+```bash
+# Start services
 docker-compose up -d
 
 # Stop services  
@@ -328,7 +331,7 @@ docker-compose up --scale backend=2
 # Clean rebuild
 docker-compose down --volumes
 docker-compose up --build -d
-
+```
 
 ## 🚀 Deployment
 
