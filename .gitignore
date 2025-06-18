@@ -10,12 +10,17 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env.docker
 
 # Build outputs
 dist/
 build/
 .next/
 out/
+
+# Vite/React specific
+.vite/
+vite.config.js.timestamp-*
 
 # IDE files
 .vscode/
@@ -35,6 +40,8 @@ Thumbs.db
 
 # Docker
 .dockerignore
+.docker/
+docker-compose.override.yml
 
 # Logs
 logs/
@@ -80,6 +87,45 @@ tmp/
 *.db
 *.sqlite
 *.sqlite3
+data/
+mongo-data/
+
+# MongoDB local data (if running locally)
+/data/db/
+
+# PM2 process manager
+.pm2/
 
 # Compressed files (exclude the tar.gz we have)
 # *.tar.gz  # Comment this out since we have diet-app.tar.gz
+
+# Health check files
+health-check.log
+healthcheck.log
+
+# Test coverage
+.nyc_output/
+
+# Runtime configuration
+.config/
+
+# Sentry
+.sentryclirc
+
+# Error screenshots (if using testing tools)
+screenshots/
+test-results/
+
+# Local development certificates
+*.pem
+*.key
+*.crt
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# Stylelint cache
+.stylelintcache
