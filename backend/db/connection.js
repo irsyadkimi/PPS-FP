@@ -1,39 +1,57 @@
 const mongoose = require('mongoose');
 
-// Konfigurasi koneksi MongoDB
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://mongo:27017/diet_app', {
+    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/dietapp';
+    
+    const options = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    });
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      bufferCommands: false,
+      bufferMaxEntries: 0
+    };
 
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}:${conn.connection.port}`);
-    console.log(`📊 Database Name: ${conn.connection.name}`);
+    const conn = await mongoose.connect(mongoURI, options);
     
-    // Event listeners untuk monitoring koneksi
-    mongoose.connection.on('connected', () => {
-      console.log('🔗 Mongoose connected to MongoDB');
-    });
-
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    console.log(`📊 Database: ${conn.connection.name}`);
+    
+    // Connection event listeners
     mongoose.connection.on('error', (err) => {
-      console.error('❌ Mongoose connection error:', err);
+      console.error('❌ MongoDB connection error:', err);
     });
 
     mongoose.connection.on('disconnected', () => {
-      console.log('🔌 Mongoose disconnected from MongoDB');
+      console.warn('⚠️ MongoDB disconnected');
     });
 
-    // Graceful close pada app termination
+    mongoose.connection.on('reconnected', () => {
+      console.log('🔄 MongoDB reconnected');
+    });
+
+    // Graceful shutdown
     process.on('SIGINT', async () => {
-      await mongoose.connection.close();
-      console.log('🛑 MongoDB connection closed through app termination');
-      process.exit(0);
+      try {
+        await mongoose.connection.close();
+        console.log('🔒 MongoDB connection closed through app termination');
+        process.exit(0);
+      } catch (err) {
+        console.error('❌ Error during MongoDB shutdown:', err);
+        process.exit(1);
+      }
     });
 
   } catch (error) {
-    console.error('❌ Error connecting to MongoDB:', error.message);
-    process.exit(1);
+    console.error('❌ MongoDB connection failed:', error.message);
+    
+    // Retry connection after 5 seconds
+    setTimeout(() => {
+      console.log('🔄 Retrying MongoDB connection...');
+      connectDB();
+    }, 5000);
   }
 };
 

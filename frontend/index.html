@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/diet-icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Aplikasi asesmen diet untuk personalisasi makanan sehat berdasarkan kondisi kesehatan dan tujuan diet Anda." />
+    <meta name="keywords" content="diet, asesmen, makanan sehat, BMI, rekomendasi makanan, kesehatan" />
+    <meta name="author" content="Fausta Irsyad Ramadhan" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Diet Assessment App - Personalisasi Makanan Sehat" />
+    <meta property="og:description" content="Dapatkan rekomendasi makanan sehat yang dipersonalisasi berdasarkan kondisi kesehatan Anda." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/og-image.jpg" />
+    
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Diet Assessment App" />
+    <meta name="twitter:description" content="Asesmen diet untuk rekomendasi makanan sehat yang dipersonalisasi" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#10b981" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Diet Assessment" />
+    
+    <!-- Preconnect for better performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <title>Diet Assessment App - Personalisasi Makanan Sehat</title>
+    
+    <style>
+      /* Loading spinner styles */
+      .initial-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: 'Inter', sans-serif;
+      }
+      
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .loading-text {
+        margin-top: 20px;
+        color: white;
+        font-size: 18px;
+        font-weight: 500;
+      }
+      
+      .loading-subtext {
+        margin-top: 8px;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <!-- Initial loading screen -->
+      <div class="initial-loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Diet Assessment App</div>
+        <div class="loading-subtext">Memuat aplikasi...</div>
+      </div>
+    </div>
+    
+    <script type="module" src="/src/main.jsx"></script>
+    
+    <script>
+      // Remove loading screen when app is loaded
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const loadingElement = document.querySelector('.initial-loading');
+          if (loadingElement) {
+            loadingElement.style.opacity = '0';
+            loadingElement.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => {
+              loadingElement.remove();
+            }, 300);
+          }
+        }, 1000);
+      });
+      
+      // Handle app errors
+      window.addEventListener('error', (event) => {
+        console.error('Application error:', event.error);
+      });
+    </script>
+  </body>
+</html>
