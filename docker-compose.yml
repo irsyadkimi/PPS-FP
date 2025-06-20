@@ -42,7 +42,6 @@ services:
       MONGODB_URI: mongodb://admin:dietapp123@mongodb:27017/dietapp?authSource=admin
     depends_on:
       mongodb:
-        condition: service_healthy
     networks:
       - diet-network
     volumes:
@@ -51,7 +50,7 @@ services:
       # For logs
       - ./logs/backend:/app/logs
     healthcheck:
-      test: ["CMD", "node", "healthcheck.js"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -69,7 +68,7 @@ services:
     env_file:
       - ./frontend/.env
     depends_on:
-      - backend
+      backend:
     networks:
       - diet-network
     healthcheck:
@@ -112,7 +111,6 @@ services:
       ME_CONFIG_BASICAUTH_PASSWORD: admin123
     depends_on:
       mongodb:
-        condition: service_healthy
     networks:
       - diet-network
 
