@@ -37,13 +37,35 @@ try {
 // });
 // app.use('/api/', limiter);
 
-// CORS configuration
+// CORS configuration - UPDATED untuk support public IP
+const allowedOrigins = [
+  'http://localhost:3000',           // Development
+  'http://127.0.0.1:3000',          // Local development alternative
+  'http://217.15.160.69:3000',      // Production frontend
+  'http://217.15.160.69',           // Production without port
+  process.env.CORS_ORIGIN || 'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, postman)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('🚫 CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS policy'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  optionsSuccessStatus: 200 // For legacy browser support
 }));
+
+// Handle preflight requests
+app.options('*', cors());
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
@@ -65,7 +87,11 @@ app.get('/health', (req, res) => {
     message: 'Diet Assessment API is running',
     timestamp: new Date().toISOString(),
     version: '1.0.0',
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    cors: {
+      allowedOrigins: allowedOrigins,
+      requestOrigin: req.get('Origin') || 'no-origin'
+    }
   });
 });
 
@@ -75,6 +101,11 @@ app.get('/api', (req, res) => {
     name: 'Diet Assessment API',
     version: '1.0.0',
     description: 'API untuk asesmen diet dan rekomendasi makanan sehat',
+    server: {
+      host: req.get('Host'),
+      origin: req.get('Origin'),
+      userAgent: req.get('User-Agent')
+    },
     endpoints: {
       health: 'GET /health',
       assessment: {
@@ -117,13 +148,25 @@ app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
     message: 'Endpoint not found',
-    availableEndpoints: '/api'
+    availableEndpoints: '/api',
+    requestedPath: req.originalUrl,
+    requestOrigin: req.get('Origin')
   });
 });
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err.stack);
+  
+  // Special handling for CORS errors
+  if (err.message && err.message.includes('CORS')) {
+    return res.status(403).json({
+      success: false,
+      message: 'CORS policy violation',
+      origin: req.get('Origin'),
+      allowedOrigins: allowedOrigins
+    });
+  }
   
   res.status(err.statusCode || 500).json({
     success: false,
@@ -144,10 +187,12 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Diet Assessment API running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+  console.log(`🌐 Public health check: http://217.15.160.69:${PORT}/health`);
   console.log(`📚 API docs: http://localhost:${PORT}/api`);
   console.log(`🥗 Assessment API: http://localhost:${PORT}/api/v1/assessment`);
   console.log(`🍽️  Recommendation API: http://localhost:${PORT}/api/v1/recommendation`);
   console.log(`👤 User API: http://localhost:${PORT}/api/v1/user`);
+  console.log(`🔒 CORS allowed origins:`, allowedOrigins);
 });
 
 module.exports = app;
