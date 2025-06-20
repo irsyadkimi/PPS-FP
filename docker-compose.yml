@@ -41,7 +41,7 @@ services:
       # Override untuk Docker network
       MONGODB_URI: mongodb://admin:dietapp123@mongodb:27017/dietapp?authSource=admin
     depends_on:
-      mongodb:
+      - mongodb
     networks:
       - diet-network
     volumes:
@@ -68,7 +68,7 @@ services:
     env_file:
       - ./frontend/.env
     depends_on:
-      backend:
+      - backend
     networks:
       - diet-network
     healthcheck:
@@ -130,3 +130,4 @@ networks:
         - subnet: 172.20.0.0/16
 
 # push
+
