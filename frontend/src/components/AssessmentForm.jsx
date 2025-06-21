@@ -10,6 +10,7 @@ const AssessmentForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
+    name: '',
     age: '',
     weight: '',
     height: '',
@@ -51,7 +52,7 @@ const AssessmentForm = () => {
   const validateCurrentStep = () => {
     switch (currentStep) {
       case 1:
-        return formData.age && formData.weight && formData.height;
+        return formData.name && formData.age && formData.weight && formData.height;
       case 2:
         return formData.goal;
       case 3:
@@ -98,6 +99,7 @@ const AssessmentForm = () => {
     
     try {
       const assessmentData = {
+        name: formData.name,
         age: parseInt(formData.age),
         weight: parseFloat(formData.weight),
         height: parseFloat(formData.height),
@@ -145,6 +147,19 @@ const AssessmentForm = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="e.g., John Doe"
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Age (years)
@@ -302,7 +317,11 @@ const AssessmentForm = () => {
             </div>
             
             <div className="bg-gray-50 rounded-xl p-6 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center">
+                  <p className="text-sm text-gray-600">Name</p>
+                  <p className="text-lg font-semibold">{formData.name}</p>
+                </div>
                 <div className="text-center">
                   <p className="text-sm text-gray-600">Age</p>
                   <p className="text-lg font-semibold">{formData.age} years</p>

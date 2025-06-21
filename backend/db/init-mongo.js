@@ -10,6 +10,7 @@ db.createCollection('recommendations');
 
 // Create indexes for better performance
 db.assessments.createIndex({ "userId": 1 });
+db.assessments.createIndex({ "name": 1 });
 db.assessments.createIndex({ "createdAt": -1 });
 db.users.createIndex({ "email": 1 }, { unique: true });
 db.recommendations.createIndex({ "assessmentId": 1 });
