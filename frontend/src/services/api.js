@@ -114,6 +114,26 @@ export const assessmentAPI = {
     }
   },
 
+  // Get assessment by ID
+  getAssessmentById: async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/assessment/${id}`, {
+        method: 'GET',
+        headers: apiUtils.createHeaders()
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to get assessment');
+      }
+
+      return data;
+    } catch (error) {
+      return apiUtils.handleError(error);
+    }
+  },
+
   // Update user preferences
   updateUserPreferences: async (userId, preferences) => {
     try {
