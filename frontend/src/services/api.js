@@ -42,13 +42,6 @@ export const apiUtils = {
         console.warn('Unable to store userId:', e);
       }
     }
-  },
-  getUserId: () => {
-    try {
-      return localStorage.getItem('dietapp_user_id');
-    } catch (e) {
-      return null;
-    }
   }
 };
 
