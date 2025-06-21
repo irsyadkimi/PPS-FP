@@ -11,7 +11,8 @@ const AssessmentPage = () => {
   const handleSubmit = async (formData) => {
     setIsSubmitting(true);
     try {
-      const result = await assessmentAPI.submitAssessment(formData);
+      const payload = { ...formData };
+      const result = await assessmentAPI.submitAssessment(payload);
       if (result.error) {
         throw new Error(result.message);
       }

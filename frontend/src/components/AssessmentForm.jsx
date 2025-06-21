@@ -18,7 +18,19 @@ const AssessmentForm = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (onSubmit) {
-      onSubmit(formData);
+      const processedData = {
+        ...formData,
+        age: Number(formData.age),
+        weight: Number(formData.weight),
+        height: Number(formData.height),
+        diseases: formData.diseases
+          ? formData.diseases
+              .split(',')
+              .map((v) => v.trim().toLowerCase())
+              .filter(Boolean)
+          : [],
+      };
+      onSubmit(processedData);
     }
   };
 
@@ -66,13 +78,17 @@ const AssessmentForm = ({ onSubmit }) => {
       </div>
       <div>
         <label htmlFor="goal">Goal</label>
-        <input
+        <select
           id="goal"
           name="goal"
-          type="text"
           value={formData.goal}
           onChange={handleChange}
-        />
+        >
+          <option value="">Select Goal</option>
+          <option value="hidup_sehat">Hidup Sehat</option>
+          <option value="diet">Diet</option>
+          <option value="massa_otot">Massa Otot</option>
+        </select>
       </div>
       <div>
         <label htmlFor="diseases">Diseases</label>
