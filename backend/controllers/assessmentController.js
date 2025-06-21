@@ -67,7 +67,12 @@ const getAssessmentForm = async (req, res) => {
 // Main Assessment Submission - POST /api/v1/assessment
 const submitAssessment = async (req, res) => {
   try {
-    const { name, age, weight, height, goal, diseases, userId } = req.body;
+    let { name, age, weight, height, goal, diseases, userId } = req.body;
+
+    // Generate a simple userId if not provided
+    if (!userId) {
+      userId = Date.now().toString();
+    }
 
     const analysisResults = await DietAnalysisService.analyzeUserData({
       age,
@@ -93,7 +98,8 @@ const submitAssessment = async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'Assessment submitted successfully',
-      data: assessment
+      data: assessment,
+      userId: assessment.userId
     });
 
   } catch (error) {
