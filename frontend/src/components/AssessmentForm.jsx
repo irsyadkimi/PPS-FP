@@ -99,6 +99,7 @@ const AssessmentForm = () => {
     
     try {
       const assessmentData = {
+        userId: apiUtils.getUserId(),
         name: formData.name,
         age: parseInt(formData.age),
         weight: parseFloat(formData.weight),

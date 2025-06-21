@@ -36,7 +36,7 @@ const HistoryPage = () => {
     try {
       setLoading(true);
       const userId = apiUtils.getUserId();
-      const response = await assessmentAPI.getHistory(userId, currentPage, itemsPerPage);
+    const response = await assessmentAPI.getAssessmentHistory(userId, currentPage, itemsPerPage);
       
       if (response.success) {
         setHistoryData(response.data);

@@ -4,6 +4,14 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://backend:5000';
 // API utility functions
 export const apiUtils = {
   formatResponse: (data) => data,
+  getUserId: () => {
+    let userId = localStorage.getItem('dietapp_user_id');
+    if (!userId) {
+      userId = `user_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+      localStorage.setItem('dietapp_user_id', userId);
+    }
+    return userId;
+  },
   handleError: (error) => {
     console.error('API Error:', error);
     if (error.response) {
