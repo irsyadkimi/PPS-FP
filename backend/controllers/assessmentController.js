@@ -41,9 +41,9 @@ const getAssessmentForm = async (req, res) => {
           label: 'Tujuan Diet',
           required: true,
           options: [
-            { value: 'Hidup Sehat', label: 'Hidup Sehat' },
-            { value: 'Diet', label: 'Menurunkan Berat Badan' },
-            { value: 'Massa Otot', label: 'Menambah Massa Otot' }
+            { value: 'hidup_sehat', label: 'Hidup Sehat' },
+            { value: 'diet', label: 'Menurunkan Berat Badan' },
+            { value: 'massa_otot', label: 'Menambah Massa Otot' }
           ]
         }
       ]
