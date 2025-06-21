@@ -90,7 +90,7 @@ Content-Type: application/json
   "weight": 70,
   "height": 170,
   "goal": "Diet",
-  "diseases": ["Diabetes"]
+  "diseases": ["diabetes"]
 }
 ```
 

@@ -69,17 +69,24 @@ const submitAssessment = async (req, res) => {
   try {
     let { name, age, weight, height, goal, diseases, userId } = req.body;
 
+    // Normalize disease names to lowercase enum values
+    if (Array.isArray(diseases)) {
+      diseases = diseases.map((d) => d.toLowerCase().replace(/\s+/g, '_'));
+    }
+
     // Generate a simple userId if not provided
     if (!userId) {
       userId = Date.now().toString();
     }
+
+    diseases = diseases || [];
 
     const analysisResults = await DietAnalysisService.analyzeUserData({
       age,
       weight,
       height,
       goal,
-      diseases: diseases || []
+      diseases
     });
 
     const assessment = new Assessment({
@@ -87,7 +94,7 @@ const submitAssessment = async (req, res) => {
       name,
       personalData: { age, weight, height },
       goal,
-      diseases: diseases || [],
+      diseases,
       results: analysisResults
     });
 

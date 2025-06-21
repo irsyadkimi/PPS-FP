@@ -132,25 +132,25 @@ class DietAnalysisService {
     // Disease-based recommendations
     diseases.forEach(disease => {
       switch (disease) {
-        case 'Diabetes':
+        case 'diabetes':
           recommendations.dietary.push('Batasi gula dan karbohidrat sederhana');
           recommendations.dietary.push('Pilih makanan dengan indeks glikemik rendah');
           recommendations.lifestyle.push('Monitor gula darah secara teratur');
           break;
-          
-        case 'Hipertensi':
+
+        case 'hipertensi':
           recommendations.dietary.push('Kurangi asupan garam (< 2300mg/hari)');
           recommendations.dietary.push('Tingkatkan konsumsi kalium dari buah dan sayur');
           recommendations.lifestyle.push('Kelola stress dengan baik');
           break;
-          
-        case 'Kolesterol':
+
+        case 'kolesterol':
           recommendations.dietary.push('Batasi lemak jenuh dan trans');
           recommendations.dietary.push('Tingkatkan serat larut dari oats dan kacang-kacangan');
           recommendations.lifestyle.push('Olahraga aerobik secara teratur');
           break;
-          
-        case 'Asam Urat':
+
+        case 'asam_urat':
           recommendations.dietary.push('Hindari makanan tinggi purin (jeroan, seafood)');
           recommendations.dietary.push('Minum air putih minimal 8 gelas per hari');
           recommendations.lifestyle.push('Batasi konsumsi alkohol');
@@ -222,7 +222,7 @@ class DietAnalysisService {
     };
 
     // Filter based on health conditions
-    if (diseases.includes('Diabetes')) {
+    if (diseases.includes('diabetes')) {
       // Remove high sugar options
       options.breakfast = options.breakfast.filter(item => !item.includes('buah manis'));
       options.snack = options.snack.filter(item => !item.includes('buah manis'));
@@ -237,31 +237,31 @@ class DietAnalysisService {
 
     diseases.forEach(disease => {
       switch (disease) {
-        case 'Diabetes':
+        case 'diabetes':
           restrictions.push({
             type: 'Hindari',
             items: ['Gula tambahan', 'Makanan olahan tinggi gula', 'Minuman manis'],
             reason: 'Dapat meningkatkan gula darah secara drastis'
           });
           break;
-          
-        case 'Hipertensi':
+
+        case 'hipertensi':
           restrictions.push({
             type: 'Batasi',
             items: ['Garam berlebih', 'Makanan asin', 'Fast food'],
             reason: 'Dapat meningkatkan tekanan darah'
           });
           break;
-          
-        case 'Kolesterol':
+
+        case 'kolesterol':
           restrictions.push({
             type: 'Hindari',
             items: ['Lemak jenuh', 'Makanan gorengan', 'Jeroan'],
             reason: 'Dapat meningkatkan kolesterol LDL'
           });
           break;
-          
-        case 'Asam Urat':
+
+        case 'asam_urat':
           restrictions.push({
             type: 'Hindari',
             items: ['Jeroan', 'Seafood tinggi purin', 'Alkohol'],

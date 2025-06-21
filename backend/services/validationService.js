@@ -51,12 +51,12 @@ class ValidationService {
         
       diseases: Joi.array()
         .items(
-          Joi.string().valid('Diabetes', 'Hipertensi', 'Kolesterol', 'Asam Urat')
+          Joi.string().valid('diabetes', 'hipertensi', 'kolesterol', 'asam_urat')
         )
         .optional()
         .messages({
           'array.base': 'Riwayat penyakit harus berupa array',
-          'any.only': 'Penyakit harus salah satu dari: Diabetes, Hipertensi, Kolesterol, Asam Urat'
+          'any.only': 'Penyakit harus salah satu dari: diabetes, hipertensi, kolesterol, asam_urat'
         }),
         
       userId: Joi.string()
@@ -161,7 +161,7 @@ class ValidationService {
 
     // Age vs disease validation
     if (data.age && data.diseases) {
-      if (data.age < 30 && data.diseases.includes('Diabetes')) {
+      if (data.age < 30 && data.diseases.includes('diabetes')) {
         warnings.push({
           field: 'age_disease',
           message: 'Diabetes di usia muda memerlukan perhatian khusus'
@@ -197,8 +197,8 @@ class ValidationService {
 
     // Disease combinations validation
     if (data.diseases && data.diseases.length > 0) {
-      const hasMetabolicDiseases = data.diseases.filter(d => 
-        ['Diabetes', 'Hipertensi', 'Kolesterol'].includes(d)
+      const hasMetabolicDiseases = data.diseases.filter(d =>
+        ['diabetes', 'hipertensi', 'kolesterol'].includes(d)
       );
 
       if (hasMetabolicDiseases.length >= 2) {
