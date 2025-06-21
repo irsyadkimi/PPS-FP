@@ -1,9 +1,17 @@
 // frontend/src/services/api.js
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://217.15.160.69:5000';
 
 // API utility functions
 export const apiUtils = {
   formatResponse: (data) => data,
+  getUserId: () => {
+    let userId = localStorage.getItem('dietapp_user_id');
+    if (!userId) {
+      userId = `user_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+      localStorage.setItem('dietapp_user_id', userId);
+    }
+    return userId;
+  },
   handleError: (error) => {
     console.error('API Error:', error);
     if (error.response) {
@@ -25,7 +33,16 @@ export const apiUtils = {
   createHeaders: () => ({
     'Content-Type': 'application/json',
     'Accept': 'application/json'
-  })
+  }),
+  setUserId: (id) => {
+    if (id) {
+      try {
+        localStorage.setItem('dietapp_user_id', id);
+      } catch (e) {
+        console.warn('Unable to store userId:', e);
+      }
+    }
+  }
 };
 
 // Assessment API functions
@@ -33,8 +50,6 @@ export const assessmentAPI = {
   // Submit assessment
   submitAssessment: async (assessmentData) => {
     try {
-      console.log('📤 Submitting assessment to:', `${API_BASE_URL}/api/v1/assessment`);
-      
       const response = await fetch(`${API_BASE_URL}/api/v1/assessment`, {
         method: 'POST',
         headers: apiUtils.createHeaders(),
@@ -42,74 +57,15 @@ export const assessmentAPI = {
       });
       
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Assessment submission failed');
       }
-      
-      return data;
-    } catch (error) {
-      return apiUtils.handleError(error);
-    }
-  },
 
-  // Get assessment by ID - NEW FUNCTION
-  getAssessmentById: async (assessmentId) => {
-    try {
-      console.log('📥 Fetching assessment:', assessmentId);
-      
-      const response = await fetch(`${API_BASE_URL}/api/v1/assessment/${assessmentId}`, {
-        method: 'GET',
-        headers: apiUtils.createHeaders()
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to get assessment');
+      if (data.userId) {
+        apiUtils.setUserId(data.userId);
       }
-      
-      return data;
-    } catch (error) {
-      return apiUtils.handleError(error);
-    }
-  },
 
-  // Get assessment form structure
-  getAssessmentForm: async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/assessment/form`, {
-        method: 'GET',
-        headers: apiUtils.createHeaders()
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to get form structure');
-      }
-      
-      return data;
-    } catch (error) {
-      return apiUtils.handleError(error);
-    }
-  },
-
-  // Validate assessment data
-  validateAssessmentData: async (assessmentData) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/assessment/validate`, {
-        method: 'POST',
-        headers: apiUtils.createHeaders(),
-        body: JSON.stringify(assessmentData)
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Validation failed');
-      }
-      
       return data;
     } catch (error) {
       return apiUtils.handleError(error);
@@ -119,7 +75,8 @@ export const assessmentAPI = {
   // Get recommendations
   getRecommendations: async (userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/recommendation/${userId}`, {
+      const id = userId || apiUtils.getUserId();
+      const response = await fetch(`${API_BASE_URL}/api/v1/recommendation/${id}`, {
         method: 'GET',
         headers: apiUtils.createHeaders()
       });
@@ -139,7 +96,8 @@ export const assessmentAPI = {
   // Get assessment history
   getAssessmentHistory: async (userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/assessment/history/${userId}`, {
+      const id = userId || apiUtils.getUserId();
+      const response = await fetch(`${API_BASE_URL}/api/v1/assessment/history/${id}`, {
         method: 'GET',
         headers: apiUtils.createHeaders()
       });
@@ -159,7 +117,8 @@ export const assessmentAPI = {
   // Update user preferences
   updateUserPreferences: async (userId, preferences) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/user/preferences/${userId}`, {
+      const id = userId || apiUtils.getUserId();
+      const response = await fetch(`${API_BASE_URL}/api/v1/user/preferences/${id}`, {
         method: 'PUT',
         headers: apiUtils.createHeaders(),
         body: JSON.stringify(preferences)
@@ -175,6 +134,11 @@ export const assessmentAPI = {
     } catch (error) {
       return apiUtils.handleError(error);
     }
+  },
+
+  // Alias for backwards compatibility
+  getHistory: async (userId) => {
+    return assessmentAPI.getAssessmentHistory(userId);
   }
 };
 
@@ -191,111 +155,6 @@ export const healthAPI = {
       
       if (!response.ok) {
         throw new Error(data.message || 'Health check failed');
-      }
-      
-      return data;
-    } catch (error) {
-      return apiUtils.handleError(error);
-    }
-  }
-};
-
-// User API functions
-export const userAPI = {
-  // Get user profile
-  getProfile: async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/user/profile`, {
-        method: 'GET',
-        headers: apiUtils.createHeaders()
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to get profile');
-      }
-      
-      return data;
-    } catch (error) {
-      return apiUtils.handleError(error);
-    }
-  },
-
-  // Update user profile
-  updateProfile: async (profileData) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/user/profile`, {
-        method: 'PUT',
-        headers: apiUtils.createHeaders(),
-        body: JSON.stringify(profileData)
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to update profile');
-      }
-      
-      return data;
-    } catch (error) {
-      return apiUtils.handleError(error);
-    }
-  },
-
-  // Get user preferences
-  getPreferences: async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/user/preferences`, {
-        method: 'GET',
-        headers: apiUtils.createHeaders()
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to get preferences');
-      }
-      
-      return data;
-    } catch (error) {
-      return apiUtils.handleError(error);
-    }
-  },
-
-  // Update user preferences
-  updatePreferences: async (preferences) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/user/preferences`, {
-        method: 'PUT',
-        headers: apiUtils.createHeaders(),
-        body: JSON.stringify(preferences)
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to update preferences');
-      }
-      
-      return data;
-    } catch (error) {
-      return apiUtils.handleError(error);
-    }
-  },
-
-  // Get user dashboard
-  getDashboard: async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/user/dashboard`, {
-        method: 'GET',
-        headers: apiUtils.createHeaders()
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to get dashboard');
       }
       
       return data;
