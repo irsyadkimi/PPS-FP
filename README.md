@@ -55,6 +55,12 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
+Setelah mengekstrak projek, salin file contoh environment:
+```bash
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+```
+
 ### 2. Jalankan dengan Docker
 ```bash
 # Start semua services
@@ -338,8 +344,13 @@ docker-compose up --build -d
 Aplikasi siap di-deploy dengan Docker Compose:
 
 1. Clone repository
-2. Jalankan `docker-compose up --build -d`
-3. Akses aplikasi di port yang dikonfigurasi
+2. Salin file `.env.example` ke `.env` untuk backend dan frontend
+   ```bash
+   cp backend/.env.example backend/.env
+   cp frontend/.env.example frontend/.env
+   ```
+3. Jalankan `docker-compose up --build -d`
+4. Akses aplikasi di port yang dikonfigurasi
 
 ---
 
