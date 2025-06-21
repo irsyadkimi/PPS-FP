@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAssessmentHistory, formatUserId } from '../services/api';
+import { assessmentAPI } from '../services/api';
 
 const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
   const [history, setHistory] = useState([]);
@@ -13,12 +13,9 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
   }, [result]);
 
   const loadAssessmentHistory = async () => {
-    if (!result?.name) return;
-    
     setLoadingHistory(true);
     try {
-      const userId = formatUserId(result.name);
-      const response = await getAssessmentHistory(userId);
+      const response = await assessmentAPI.getAssessmentHistory();
       if (response.success) {
         setHistory(response.data.assessments || []);
       }
