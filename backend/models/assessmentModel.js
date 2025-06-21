@@ -157,7 +157,7 @@ const assessmentSchema = new mongoose.Schema({
   },
   diseases: [{
     type: String,
-    enum: ['Diabetes', 'Hipertensi', 'Kolesterol', 'Asam Urat']
+    enum: ['diabetes', 'hipertensi', 'kolesterol', 'asam_urat']
   }],
   results: {
     type: resultsSchema,
@@ -412,7 +412,7 @@ assessmentSchema.pre('validate', function(next) {
   }
 
   // Check goal consistency with health conditions
-  if (this.goal === 'massa_otot' && this.diseases && this.diseases.includes('Diabetes')) {
+  if (this.goal === 'massa_otot' && this.diseases && this.diseases.includes('diabetes')) {
     // This is just a warning, not an error
     console.warn('User with diabetes choosing muscle gain goal - may need special attention');
   }
