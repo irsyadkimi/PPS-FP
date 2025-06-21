@@ -165,14 +165,19 @@ const validateAssessmentData = async (req, res) => {
 const getAssessmentById = async (req, res) => {
   try {
     const { assessmentId } = req.params;
-    
+    const assessment = await Assessment.findById(assessmentId);
+
+    if (!assessment) {
+      return res.status(404).json({
+        success: false,
+        message: 'Assessment not found'
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: 'Assessment retrieved',
-      data: {
-        id: assessmentId,
-        message: 'Assessment data would be here'
-      }
+      data: assessment
     });
 
   } catch (error) {
