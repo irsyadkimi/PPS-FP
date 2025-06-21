@@ -25,7 +25,23 @@ export const apiUtils = {
   createHeaders: () => ({
     'Content-Type': 'application/json',
     'Accept': 'application/json'
-  })
+  }),
+  setUserId: (id) => {
+    if (id) {
+      try {
+        localStorage.setItem('dietapp_user_id', id);
+      } catch (e) {
+        console.warn('Unable to store userId:', e);
+      }
+    }
+  },
+  getUserId: () => {
+    try {
+      return localStorage.getItem('dietapp_user_id');
+    } catch (e) {
+      return null;
+    }
+  }
 };
 
 // Assessment API functions
@@ -40,11 +56,15 @@ export const assessmentAPI = {
       });
       
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Assessment submission failed');
       }
-      
+
+      if (data.userId) {
+        apiUtils.setUserId(data.userId);
+      }
+
       return data;
     } catch (error) {
       return apiUtils.handleError(error);
@@ -54,7 +74,8 @@ export const assessmentAPI = {
   // Get recommendations
   getRecommendations: async (userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/recommendation/${userId}`, {
+      const id = userId || apiUtils.getUserId();
+      const response = await fetch(`${API_BASE_URL}/api/v1/recommendation/${id}`, {
         method: 'GET',
         headers: apiUtils.createHeaders()
       });
@@ -74,7 +95,8 @@ export const assessmentAPI = {
   // Get assessment history
   getAssessmentHistory: async (userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/assessment/history/${userId}`, {
+      const id = userId || apiUtils.getUserId();
+      const response = await fetch(`${API_BASE_URL}/api/v1/assessment/history/${id}`, {
         method: 'GET',
         headers: apiUtils.createHeaders()
       });
@@ -94,7 +116,8 @@ export const assessmentAPI = {
   // Update user preferences
   updateUserPreferences: async (userId, preferences) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/user/preferences/${userId}`, {
+      const id = userId || apiUtils.getUserId();
+      const response = await fetch(`${API_BASE_URL}/api/v1/user/preferences/${id}`, {
         method: 'PUT',
         headers: apiUtils.createHeaders(),
         body: JSON.stringify(preferences)
@@ -110,6 +133,11 @@ export const assessmentAPI = {
     } catch (error) {
       return apiUtils.handleError(error);
     }
+  },
+
+  // Alias for backwards compatibility
+  getHistory: async (userId) => {
+    return assessmentAPI.getAssessmentHistory(userId);
   }
 };
 
