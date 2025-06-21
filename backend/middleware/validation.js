@@ -32,7 +32,7 @@ const validateAssessment = (req, res, next) => {
   if (!goal) {
     errors.push('Goal is required');
   } else if (!validGoals.includes(goal)) {
-    errors.push('Goal must be one of: hidup_sehat, diet, massa_otot');
+    errors.push(`Goal must be one of: ${validGoals.join(', ')}`);
   }
 
   // Validate diseases (optional)
