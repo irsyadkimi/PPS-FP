@@ -1,8 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AssessmentForm from '../components/AssessmentForm';
+import { useNavigate } from "react-router-dom";
+import assessmentAPI from "../services/api";
 import { Clock, Shield, Target } from 'lucide-react';
 
 const AssessmentPage = () => {
+  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (formData) => {
+    setIsSubmitting(true);
+    try {
+      const result = await assessmentAPI.submitAssessment(formData);
+      if (result.error) {
+        throw new Error(result.message);
+      }
+      navigate('/results');
+    } catch (error) {
+      console.error("Assessment submission failed:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   const benefits = [
     {
       icon: Clock,
@@ -54,7 +73,7 @@ const AssessmentPage = () => {
 
       {/* Assessment Form */}
       <div className="assessment-content">
-        <AssessmentForm />
+        <AssessmentForm onSubmit={handleSubmit} />
       </div>
 
       {/* Footer Note */}
