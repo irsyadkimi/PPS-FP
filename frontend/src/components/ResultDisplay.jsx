@@ -42,6 +42,13 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
     return '#f44336';
   };
 
+  const sampleFoods = React.useMemo(() => {
+    if (!result?.mealPlan?.meals) return [];
+    const foods = result.mealPlan.meals.flatMap(m => m.suggestions || []);
+    const unique = Array.from(new Set(foods));
+    return unique.slice(0, 4);
+  }, [result]);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('id-ID', {
@@ -70,6 +77,17 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
         <h1>📊 Hasil Assessment Anda</h1>
         <p>Halo <strong>{result.name}</strong>, berikut analisis kesehatan Anda</p>
       </div>
+
+      {sampleFoods.length > 0 && (
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <h3>Rekomendasi Makanan</h3>
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {sampleFoods.map((food, idx) => (
+              <li key={idx}>{food}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* BMI Card */}
       <div className="result-card bmi-card">

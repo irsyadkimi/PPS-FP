@@ -16,7 +16,12 @@ const AssessmentPage = () => {
       if (result.error) {
         throw new Error(result.message);
       }
-      navigate('/results');
+      const id = result.data?._id;
+      if (id) {
+        navigate(`/results/${id}`);
+      } else {
+        navigate('/results');
+      }
     } catch (error) {
       console.error("Assessment submission failed:", error);
     } finally {
