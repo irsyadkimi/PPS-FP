@@ -142,6 +142,10 @@ const assessmentSchema = new mongoose.Schema({
     required: true,
     index: true
   },
+  name: {
+    type: String,
+    required: true
+  },
   personalData: {
     type: personalDataSchema,
     required: true
@@ -184,6 +188,7 @@ const assessmentSchema = new mongoose.Schema({
 
 // Indexes for better query performance
 assessmentSchema.index({ userId: 1, createdAt: -1 });
+assessmentSchema.index({ name: 1 });
 assessmentSchema.index({ 'personalData.weight': 1 });
 assessmentSchema.index({ 'personalData.height': 1 });
 assessmentSchema.index({ goal: 1 });

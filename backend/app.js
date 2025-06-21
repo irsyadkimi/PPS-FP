@@ -13,15 +13,14 @@ const recommendationRoutes = require('./routes/recommendationRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 // Import database connection (comment jika belum ada)
-// const connectDB = require('./db/connection');
+const connectDB = require('./db/connection');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to database (optional for now - comment jika error)
+// Connect to database
 try {
-  // connectDB();
-  console.log('⚠️  Database connection disabled for now');
+  connectDB();
 } catch (error) {
   console.log('⚠️  Database connection error:', error.message);
 }

@@ -67,40 +67,34 @@ const getAssessmentForm = async (req, res) => {
 // Main Assessment Submission - POST /api/v1/assessment
 const submitAssessment = async (req, res) => {
   try {
-    const { age, weight, height, goal, diseases, userId } = req.body;
+    const { name, age, weight, height, goal, diseases, userId } = req.body;
 
-    // Calculate BMI
-    const bmi = weight / Math.pow(height / 100, 2);
-    
-    // Simple analysis
-    let bmiCategory = '';
-    if (bmi < 18.5) bmiCategory = 'Underweight';
-    else if (bmi < 25) bmiCategory = 'Normal';
-    else if (bmi < 30) bmiCategory = 'Overweight';
-    else bmiCategory = 'Obese';
-    
-    // Simple recommendations
-    let recommendations = ['Maintain balanced diet', 'Exercise regularly'];
-    
-    if (goal === 'Diet') {
-      recommendations = ['Caloric deficit', 'High protein foods', 'Reduce refined carbs'];
-    } else if (goal === 'Massa Otot') {
-      recommendations = ['High protein intake', 'Strength training', 'Post-workout nutrition'];
-    }
+    const analysisResults = await DietAnalysisService.analyzeUserData({
+      age,
+      weight,
+      height,
+      goal,
+      diseases: diseases || []
+    });
 
-    const result = {
+    const assessment = new Assessment({
+      userId,
+      name,
+      personalData: { age, weight, height },
+      goal,
+      diseases: diseases || [],
+      results: analysisResults
+    });
+
+    await assessment.save();
+
+    await AssessmentHistoryService.saveAssessment(assessment);
+
+    res.status(201).json({
       success: true,
-      data: {
-        assessmentId: Date.now().toString(),
-        userId: userId || `user_${Date.now()}`,
-        bmi: parseFloat(bmi.toFixed(1)),
-        bmiCategory,
-        recommendations,
-        timestamp: new Date().toISOString()
-      }
-    };
-
-    res.status(201).json(result);
+      message: 'Assessment submitted successfully',
+      data: assessment
+    });
 
   } catch (error) {
     res.status(500).json({
@@ -115,15 +109,15 @@ const submitAssessment = async (req, res) => {
 const getAssessmentHistory = async (req, res) => {
   try {
     const { userId } = req.params;
-    
+
+    const assessments = await Assessment.find({
+      $or: [{ userId }, { name: userId }]
+    }).sort({ createdAt: -1 });
+
     res.status(200).json({
       success: true,
       message: 'Assessment history retrieved',
-      data: {
-        userId,
-        assessments: [],
-        total: 0
-      }
+      data: assessments
     });
 
   } catch (error) {
