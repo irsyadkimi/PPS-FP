@@ -376,8 +376,8 @@ const AssessmentForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="assessment-form-wrapper">
+      <div className="form-container">
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
@@ -453,7 +453,33 @@ const AssessmentForm = () => {
           </div>
         </div>
       </div>
-    </div>
+        <style jsx>{`
+          .assessment-form-wrapper {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ebf4ff 0%, #c3dafe 100%);
+            display: flex;
+            justify-content: center;
+            padding: 60px 20px;
+          }
+
+          .form-container {
+            width: 100%;
+            max-width: 800px;
+          }
+
+          @media (max-width: 768px) {
+            .assessment-form-wrapper {
+              padding: 40px 16px;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .assessment-form-wrapper {
+              padding: 30px 12px;
+            }
+          }
+        `}</style>
+      </div>
   );
 };
 
