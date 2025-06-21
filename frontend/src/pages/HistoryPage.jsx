@@ -266,9 +266,9 @@ const HistoryPage = () => {
                 className="filter-select"
               >
                 <option value="all">Semua Tujuan</option>
-                <option value="Hidup Sehat">Hidup Sehat</option>
-                <option value="Diet">Diet</option>
-                <option value="Massa Otot">Massa Otot</option>
+                <option value="hidup_sehat">Hidup Sehat</option>
+                <option value="diet">Diet</option>
+                <option value="massa_otot">Massa Otot</option>
               </select>
               
               <select

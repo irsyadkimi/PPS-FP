@@ -416,9 +416,9 @@ const AssessmentForm = ({ onSubmit, onResult }) => {
           }}
         >
           <option value="">Pilih tujuan Anda</option>
-          <option value="Hidup Sehat">🌱 Hidup Lebih Sehat</option>
-          <option value="Diet">⚡ Menurunkan Berat Badan</option>
-          <option value="Massa Otot">💪 Menambah Massa Otot</option>
+          <option value="hidup_sehat">🌱 Hidup Lebih Sehat</option>
+          <option value="diet">⚡ Menurunkan Berat Badan</option>
+          <option value="massa_otot">💪 Menambah Massa Otot</option>
         </select>
         {errors.goal && <span style={styles.errorMessage}>{errors.goal}</span>}
       </div>
