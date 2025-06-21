@@ -26,7 +26,7 @@ db.foods.insertMany([
     fat: 0.9,
     fiber: 1.8,
     glycemicIndex: 55,
-    suitableFor: ["Diabetes", "Diet", "Hidup Sehat"],
+    suitableFor: ["diabetes", "diet", "hidup_sehat"],
     description: "Karbohidrat kompleks dengan indeks glikemik rendah"
   },
   {
@@ -38,7 +38,7 @@ db.foods.insertMany([
     fat: 3.6,
     fiber: 0,
     glycemicIndex: 0,
-    suitableFor: ["Massa Otot", "Diet", "Hidup Sehat"],
+    suitableFor: ["massa_otot", "diet", "hidup_sehat"],
     description: "Protein tinggi, lemak rendah"
   },
   {
@@ -50,7 +50,7 @@ db.foods.insertMany([
     fat: 0.3,
     fiber: 2.6,
     glycemicIndex: 10,
-    suitableFor: ["Diabetes", "Hipertensi", "Diet", "Hidup Sehat"],
+    suitableFor: ["diabetes", "hipertensi", "diet", "hidup_sehat"],
     description: "Tinggi serat, rendah kalori, kaya antioksidan"
   },
   {
@@ -62,7 +62,7 @@ db.foods.insertMany([
     fat: 12,
     fiber: 0,
     glycemicIndex: 0,
-    suitableFor: ["Massa Otot", "Hidup Sehat", "Kolesterol"],
+    suitableFor: ["massa_otot", "hidup_sehat", "kolesterol"],
     description: "Omega-3 tinggi, baik untuk jantung"
   },
   {
@@ -74,7 +74,7 @@ db.foods.insertMany([
     fat: 1.4,
     fiber: 1.7,
     glycemicIndex: 42,
-    suitableFor: ["Diabetes", "Kolesterol", "Diet"],
+    suitableFor: ["diabetes", "kolesterol", "diet"],
     description: "Serat tinggi, menurunkan kolesterol"
   }
 ]);
@@ -82,7 +82,7 @@ db.foods.insertMany([
 // Insert sample meal plans
 db.mealplans.insertMany([
   {
-    goal: "Diet",
+    goal: "diet",
     bmiCategory: "Overweight",
     dailyCalories: 1500,
     meals: [
@@ -109,7 +109,7 @@ db.mealplans.insertMany([
     ]
   },
   {
-    goal: "Massa Otot",
+    goal: "massa_otot",
     bmiCategory: "Normal",
     dailyCalories: 2200,
     meals: [

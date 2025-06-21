@@ -153,7 +153,7 @@ const assessmentSchema = new mongoose.Schema({
   goal: {
     type: String,
     required: true,
-    enum: ['Hidup Sehat', 'Diet', 'Massa Otot']
+    enum: ['hidup_sehat', 'diet', 'massa_otot']
   },
   diseases: [{
     type: String,
@@ -412,7 +412,7 @@ assessmentSchema.pre('validate', function(next) {
   }
 
   // Check goal consistency with health conditions
-  if (this.goal === 'Massa Otot' && this.diseases && this.diseases.includes('Diabetes')) {
+  if (this.goal === 'massa_otot' && this.diseases && this.diseases.includes('Diabetes')) {
     // This is just a warning, not an error
     console.warn('User with diabetes choosing muscle gain goal - may need special attention');
   }
@@ -433,7 +433,14 @@ assessmentSchema.methods.toJSON = function() {
   obj.daysSinceAssessment = this.daysSinceAssessment;
   obj.healthRisk = this.getHealthRisk();
   obj.isHealthyWeight = this.isHealthyWeight();
-  
+
+  const goalLabels = {
+    hidup_sehat: 'Hidup Sehat',
+    diet: 'Diet',
+    massa_otot: 'Massa Otot'
+  };
+  obj.goal = goalLabels[obj.goal] || obj.goal;
+
   return obj;
 };
 

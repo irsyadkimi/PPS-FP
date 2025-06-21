@@ -75,13 +75,13 @@ class DietAnalysisService {
     let goalAdjustment = 0;
 
     switch (goal) {
-      case 'Diet':
+      case 'diet':
         goalAdjustment = bmiCategory === 'Obese' ? -500 : -300;
         break;
-      case 'Massa Otot':
+      case 'massa_otot':
         goalAdjustment = bmiCategory === 'Underweight' ? +500 : +300;
         break;
-      case 'Hidup Sehat':
+      case 'hidup_sehat':
         goalAdjustment = 0;
         break;
     }
@@ -99,21 +99,21 @@ class DietAnalysisService {
 
     // Goal-based recommendations
     switch (goal) {
-      case 'Diet':
+      case 'diet':
         recommendations.primary.push('Fokus pada defisit kalori yang sehat');
         recommendations.dietary.push('Konsumsi protein tinggi untuk menjaga massa otot');
         recommendations.dietary.push('Pilih karbohidrat kompleks dengan indeks glikemik rendah');
         recommendations.lifestyle.push('Olahraga kardio 3-4x seminggu');
         break;
-        
-      case 'Massa Otot':
+
+      case 'massa_otot':
         recommendations.primary.push('Tingkatkan asupan protein dan kalori');
         recommendations.dietary.push('Konsumsi 1.6-2.2g protein per kg berat badan');
         recommendations.dietary.push('Makan 5-6 kali sehari dengan porsi lebih sering');
         recommendations.lifestyle.push('Latihan beban 3-4x seminggu');
         break;
-        
-      case 'Hidup Sehat':
+
+      case 'hidup_sehat':
         recommendations.primary.push('Jaga pola makan seimbang dan teratur');
         recommendations.dietary.push('Konsumsi 5 porsi buah dan sayur setiap hari');
         recommendations.lifestyle.push('Olahraga rutin minimal 150 menit per minggu');
@@ -278,9 +278,9 @@ class DietAnalysisService {
   generateSummary(bmi, bmiCategory, goal, diseases) {
     let summary = `Berdasarkan analisis, BMI Anda adalah ${Math.round(bmi * 10) / 10} (${bmiCategory}). `;
     
-    if (goal === 'Diet' && (bmiCategory === 'Overweight' || bmiCategory === 'Obese')) {
+    if (goal === 'diet' && (bmiCategory === 'Overweight' || bmiCategory === 'Obese')) {
       summary += 'Program penurunan berat badan akan sangat bermanfaat untuk kesehatan Anda. ';
-    } else if (goal === 'Massa Otot' && bmiCategory === 'Underweight') {
+    } else if (goal === 'massa_otot' && bmiCategory === 'Underweight') {
       summary += 'Program penambahan massa otot akan membantu mencapai berat badan ideal. ';
     }
 

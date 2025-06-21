@@ -41,11 +41,11 @@ class ValidationService {
         }),
         
       goal: Joi.string()
-        .valid('Hidup Sehat', 'Diet', 'Massa Otot')
+        .valid('hidup_sehat', 'diet', 'massa_otot')
         .required()
         .messages({
           'string.base': 'Tujuan diet harus berupa teks',
-          'any.only': 'Tujuan diet harus salah satu dari: Hidup Sehat, Diet, Massa Otot',
+          'any.only': 'Tujuan diet harus salah satu dari: hidup_sehat, diet, massa_otot',
           'any.required': 'Tujuan diet wajib dipilih'
         }),
         
@@ -180,14 +180,14 @@ class ValidationService {
     if (data.weight && data.height && data.goal) {
       const bmi = data.weight / ((data.height / 100) ** 2);
       
-      if (data.goal === 'Diet' && bmi < 25) {
+      if (data.goal === 'diet' && bmi < 25) {
         warnings.push({
           field: 'goal_bmi',
           message: 'BMI Anda normal, pastikan tujuan diet untuk kesehatan, bukan penurunan berat badan drastis'
         });
       }
 
-      if (data.goal === 'Massa Otot' && bmi > 30) {
+      if (data.goal === 'massa_otot' && bmi > 30) {
         warnings.push({
           field: 'goal_bmi',
           message: 'Dengan BMI tinggi, fokus pada penurunan lemak dulu sebelum menambah massa otot'
@@ -277,7 +277,7 @@ class ValidationService {
   }
 
   validateGoal(goal) {
-    const schema = Joi.string().valid('Hidup Sehat', 'Diet', 'Massa Otot');
+    const schema = Joi.string().valid('hidup_sehat', 'diet', 'massa_otot');
     const { error } = schema.validate(goal);
     return error ? { isValid: false, message: error.details[0].message } : { isValid: true };
   }

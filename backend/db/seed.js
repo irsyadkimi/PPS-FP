@@ -173,7 +173,7 @@ db.dietPackages.insertMany([
   },
   {
     packageName: "Muscle Gain Package",
-    targetCondition: ["massa otot"],
+    targetCondition: ["massa_otot"],
     duration: "7 days",
     mealsPerDay: 5,
     totalCalories: 2200,

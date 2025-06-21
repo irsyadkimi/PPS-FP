@@ -28,7 +28,7 @@ const validateAssessment = (req, res, next) => {
   }
 
   // Validate goal
-  const validGoals = ['hidup_sehat', 'diet', 'massa_otot', 'Hidup Sehat', 'Diet', 'Massa Otot'];
+  const validGoals = ['hidup_sehat', 'diet', 'massa_otot'];
   if (!goal) {
     errors.push('Goal is required');
   } else if (!validGoals.includes(goal)) {
