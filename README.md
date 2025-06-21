@@ -94,6 +94,18 @@ Content-Type: application/json
 }
 ```
 
+### Goal Values
+
+Gunakan salah satu nilai berikut untuk field `goal` pada endpoint `POST /api/v1/assessment`:
+
+| String value | Label ditampilkan |
+|--------------|------------------|
+| `hidup_sehat` | Hidup Sehat |
+| `diet` | Diet |
+| `massa_otot` | Massa Otot |
+
+Backend akan mengubah nilai tersebut menjadi label yang lebih ramah pada respon API.
+
 ### Recommendation Endpoint
 ```bash
 GET /api/v1/recommendation/:userid
