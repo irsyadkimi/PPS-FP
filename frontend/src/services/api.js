@@ -72,7 +72,7 @@ export const assessmentAPI = {
     }
   },
 
-  // Get recommendations
+  // Get recommendations for a specific user
   getRecommendations: async (userId) => {
     try {
       const id = userId || apiUtils.getUserId();
@@ -81,13 +81,35 @@ export const assessmentAPI = {
         method: 'GET',
         headers: apiUtils.createHeaders()
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to get recommendations');
       }
-      
+
+      return data;
+    } catch (error) {
+      return apiUtils.handleError(error);
+    }
+  },
+
+  // Get generic meal recommendations
+  getMealRecommendations: async (params = {}) => {
+    try {
+      const searchParams = new URLSearchParams(params).toString();
+      const endpoint = `${API_BASE_URL}/api/v1/recommendation${searchParams ? `?${searchParams}` : ''}`;
+      const response = await fetch(endpoint, {
+        method: 'GET',
+        headers: apiUtils.createHeaders()
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to get recommendations');
+      }
+
       return data;
     } catch (error) {
       return apiUtils.handleError(error);
