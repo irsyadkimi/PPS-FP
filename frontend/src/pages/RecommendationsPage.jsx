@@ -12,7 +12,7 @@ const RecommendationsPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await assessmentAPI.getRecommendations();
+        const response = await assessmentAPI.getMealRecommendations();
         if (response.success) {
           setData(response.data);
         } else {
