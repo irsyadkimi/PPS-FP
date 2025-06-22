@@ -65,15 +65,27 @@ const mealRecommendations = {
 
 export function getMealsForUser(goal, diseases = []) {
   const allMeals = [];
-  diseases.forEach(disease => {
-    const key = `${goal}:${disease}`;
-    if (mealRecommendations[key]) {
-      allMeals.push(...mealRecommendations[key]);
+
+  if (!diseases || diseases.length === 0) {
+    // Return all meals for the goal when there are no diseases
+    Object.keys(mealRecommendations).forEach(key => {
+      if (key.startsWith(`${goal}:`)) {
+        allMeals.push(...mealRecommendations[key]);
+      }
+    });
+  } else {
+    diseases.forEach(disease => {
+      const key = `${goal}:${disease}`;
+      if (mealRecommendations[key]) {
+        allMeals.push(...mealRecommendations[key]);
+      }
+    });
+
+    if (allMeals.length === 0 && mealRecommendations[`${goal}:none`]) {
+      allMeals.push(...mealRecommendations[`${goal}:none`]);
     }
-  });
-  if (allMeals.length === 0 && mealRecommendations[`${goal}:none`]) {
-    allMeals.push(...mealRecommendations[`${goal}:none`]);
   }
+
   const uniqueMeals = [...new Map(allMeals.map(m => [m.id, m])).values()];
   return uniqueMeals.slice(0, 4);
 }
