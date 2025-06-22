@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const recommendationController = require('../controllers/recommendationController');
 
 // GET /api/v1/recommendation - Get food recommendations based on assessment
 router.get('/', async (req, res) => {
@@ -63,6 +64,9 @@ router.get('/', async (req, res) => {
     });
   }
 });
+
+// GET /api/v1/recommendation/:userId - Get recommendations for a user
+router.get('/:userId', recommendationController.getUserRecommendations);
 
 // GET /api/v1/recommendation/:mealId - Get specific meal details
 router.get('/:mealId', async (req, res) => {
