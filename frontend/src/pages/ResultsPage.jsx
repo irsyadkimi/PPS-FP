@@ -219,14 +219,10 @@ const ResultsPage = () => {
 
   const result = assessmentData ? {
     name: assessmentData.name,
+    personalData: assessmentData.personalData,
     goal: assessmentData.goal,
     diseases: assessmentData.diseases,
-    ...assessmentData.results.analysis,
-    mealPlan: assessmentData.results.mealPlan,
-    recommendations: assessmentData.results.recommendations,
-    summary: assessmentData.results.summary,
-    healthScore: assessmentData.results.healthScore,
-    nextSteps: assessmentData.results.nextSteps,
+    results: assessmentData.results,
   } : null;
 
   // Success state
