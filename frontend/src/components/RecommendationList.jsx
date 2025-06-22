@@ -8,50 +8,104 @@ const goalToPackageMap = {
   'menambah massa otot': 'Paket Protein Tinggi'
 };
 
-const RecommendationList = ({ meals = [], onSelect, goal }) => {
-  if (!goal || !meals.length) return null;
+const goalLabelToEnum = {
+  'Hidup Sehat': 'hidup_sehat',
+  'Diet': 'diet',
+  'Massa Otot': 'massa_otot'
+};
 
-  const filteredMeals = meals.slice(0, 3); // limit to 3 meals only
-  const packageName = goalToPackageMap[goal.toLowerCase()] || 'Paket Makanan Sehat';
+const staticMeals = {
+  diet: {
+    diabetes: [
+      'Salad ayam rendah gula',
+      'Sup brokoli tanpa garam',
+      'Ikan kukus + sayur kukus'
+    ],
+    hipertensi: [
+      'Sup sayur tanpa garam',
+      'Tumis buncis rendah sodium',
+      'Tahu rebus + nasi merah'
+    ],
+    kolesterol: [
+      'Sayur bening bayam',
+      'Nasi merah + tempe kukus',
+      'Sup jagung tanpa minyak'
+    ],
+    asam_urat: [
+      'Nasi merah + sup labu',
+      'Telur rebus + bayam',
+      'Smoothie buah rendah gula'
+    ],
+    none: [
+      'Oatmeal buah',
+      'Nasi merah + sayur tumis',
+      'Ayam rebus + brokoli'
+    ]
+  },
+  hidup_sehat: {
+    none: [
+      'Nasi merah + tempe goreng kering',
+      'Omelet sayur',
+      'Smoothie pisang & susu'
+    ]
+  },
+  massa_otot: {
+    diabetes: [
+      'Dada ayam panggang',
+      'Telur rebus 3 butir',
+      'Protein shake tanpa gula'
+    ],
+    hipertensi: [
+      'Ikan panggang tanpa garam',
+      'Tahu kukus + bayam',
+      'Telur rebus + nasi merah'
+    ],
+    kolesterol: [
+      'Tumis dada ayam + sayur',
+      'Putih telur rebus',
+      'Nasi merah + tahu kukus'
+    ],
+    asam_urat: [
+      'Protein shake rendah purin',
+      'Sayur rebus + telur',
+      'Ayam kukus + labu siam'
+    ],
+    none: [
+      'Steak ayam + nasi merah',
+      'Telur orak-arik + roti gandum',
+      'Susu protein tinggi'
+    ]
+  }
+};
+
+const RecommendationList = ({ goal, diseases = [], onSelect }) => {
+  if (!goal) return null;
+
+  const goalKey = goalLabelToEnum[goal] || goal.toLowerCase();
+  const disease = diseases && diseases.length > 0 ? diseases[0].toLowerCase() : 'none';
+  const mealList = staticMeals[goalKey]?.[disease] || [];
+  const packageName = goalToPackageMap[goalKey] || 'Paket Makanan Sehat';
+
+  const mealsToRender = mealList.slice(0, 3);
 
   return (
     <div className="recommendation-wrapper">
       <h4 style={{ fontSize: '20px', marginBottom: '16px' }}>{packageName}</h4>
       <div className="recommendation-list">
-        {filteredMeals.map((meal) => (
+        {mealsToRender.map((meal, index) => (
           <div
-            key={meal.id || meal._id}
+            key={index}
             className="meal-card"
-            onClick={() => onSelect && onSelect(meal)}
+            onClick={() => onSelect && onSelect({ name: meal })}
             role="button"
             tabIndex={0}
           >
             <div className="meal-image">
-              {meal.image ? (
-                <img src={meal.image} alt={meal.name} />
-              ) : (
-                <span className="image-fallback" role="img" aria-label="Food">
-                  🍽️
-                </span>
-              )}
+              <span className="image-fallback" role="img" aria-label="Food">
+                🍽️
+              </span>
             </div>
-            <h3 className="meal-title">{meal.name}</h3>
-            {meal.description && <p className="meal-description">{meal.description}</p>}
-            <div className="meal-stats">
-              {meal.calories !== undefined && <span>{meal.calories} kkal</span>}
-              {meal.price !== undefined && (
-                <span>{
-                  new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(meal.price)
-                }</span>
-              )}
-            </div>
-            {(meal.protein || meal.carbs || meal.fat) && (
-              <div className="nutrition-info">
-                {meal.protein && <span>Protein: {meal.protein}g</span>}
-                {meal.carbs && <span>Karbo: {meal.carbs}g</span>}
-                {meal.fat && <span>Lemak: {meal.fat}g</span>}
-              </div>
-            )}
+            <h3 className="meal-title">{meal}</h3>
           </div>
         ))}
       </div>
