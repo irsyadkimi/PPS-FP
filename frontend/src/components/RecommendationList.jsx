@@ -78,12 +78,15 @@ const staticMeals = {
   }
 };
 
-const RecommendationList = ({ goal, diseases = [], onSelect }) => {
-  if (!goal) return null;
+const RecommendationList = ({ goal, diseases = [], onSelect, meals }) => {
+  if (!goal && (!meals || meals.length === 0)) return null;
 
-  const goalKey = goalLabelToEnum[goal] || goal.toLowerCase();
+  const goalKey = goalLabelToEnum[goal] || goal?.toLowerCase();
   const disease = diseases && diseases.length > 0 ? diseases[0].toLowerCase() : 'none';
-  const mealList = staticMeals[goalKey]?.[disease] || [];
+
+  const mealList = meals && meals.length > 0
+    ? meals
+    : staticMeals[goalKey]?.[disease] || [];
   const packageName = goalToPackageMap[goalKey] || 'Paket Makanan Sehat';
 
   const mealsToRender = mealList.slice(0, 3);
@@ -92,22 +95,38 @@ const RecommendationList = ({ goal, diseases = [], onSelect }) => {
     <div className="recommendation-wrapper">
       <h4 style={{ fontSize: '20px', marginBottom: '16px' }}>{packageName}</h4>
       <div className="recommendation-list">
-        {mealsToRender.map((meal, index) => (
-          <div
-            key={index}
-            className="meal-card"
-            onClick={() => onSelect && onSelect({ name: meal })}
-            role="button"
-            tabIndex={0}
-          >
-            <div className="meal-image">
-              <span className="image-fallback" role="img" aria-label="Food">
-                🍽️
-              </span>
+        {mealsToRender.map((meal, index) => {
+          const isObj = typeof meal === 'object';
+          const mealData = isObj ? meal : { name: meal };
+          return (
+            <div
+              key={mealData.id || index}
+              className="meal-card"
+              onClick={() => onSelect && onSelect(mealData)}
+              role="button"
+              tabIndex={0}
+            >
+              <div className="meal-image">
+                {mealData.image ? (
+                  <img src={mealData.image} alt={mealData.name} />
+                ) : (
+                  <span className="image-fallback" role="img" aria-label="Food">
+                    🍽️
+                  </span>
+                )}
+              </div>
+              <h3 className="meal-title">{mealData.name}</h3>
+              {mealData.description && (
+                <p className="meal-description">{mealData.description}</p>
+              )}
+              {mealData.calories && (
+                <div className="meal-stats">
+                  <span className="meal-calories">{mealData.calories} kkal</span>
+                </div>
+              )}
             </div>
-            <h3 className="meal-title">{meal}</h3>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
