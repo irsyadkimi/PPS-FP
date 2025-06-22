@@ -161,6 +161,7 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
           <RecommendationList
             meals={recommendedMeals}
             onSelect={setSelectedMeal}
+            goal={goalLabelToEnum[result.goal] || result.goal}
           />
         </div>
 
@@ -225,11 +226,107 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
 
       {/* Meal Modal */}
       {selectedMeal && (
-        <MealModal 
+        <MealModal
           meal={selectedMeal}
           onClose={() => setSelectedMeal(null)}
         />
       )}
+      <style jsx>{`
+        .result-display {
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 40px 20px;
+        }
+
+        .result-header {
+          text-align: center;
+          margin-bottom: 24px;
+        }
+
+        .result-content {
+          display: flex;
+          flex-direction: column;
+          gap: 32px;
+        }
+
+        .user-info-card,
+        .bmi-card,
+        .recommendations-card,
+        .meal-recommendations-card,
+        .summary-card {
+          background: white;
+          border: 1px solid var(--border-color);
+          border-radius: 12px;
+          padding: 24px;
+          box-shadow: var(--shadow-md);
+        }
+
+        .info-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+          gap: 12px;
+          margin-top: 12px;
+        }
+
+        .info-item .label {
+          font-weight: 600;
+          color: var(--text-secondary);
+        }
+
+        .info-item .value {
+          color: var(--text-primary);
+        }
+
+        .bmi-display {
+          text-align: center;
+          margin-top: 16px;
+        }
+
+        .bmi-number {
+          font-size: 36px;
+          font-weight: 700;
+        }
+
+        .bmi-category {
+          display: block;
+          font-size: 16px;
+        }
+
+        .action-buttons {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          margin-top: 24px;
+        }
+
+        .history-content {
+          margin-top: 16px;
+        }
+
+        .history-list {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .history-item {
+          background: var(--background-light);
+          padding: 8px 12px;
+          border-radius: 8px;
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .toggle-history-btn {
+          margin-top: 12px;
+        }
+
+        @media (max-width: 768px) {
+          .result-display {
+            padding: 20px 16px;
+          }
+        }
+      `}</style>
     </div>
   );
 };
