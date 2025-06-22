@@ -4,6 +4,12 @@ import { getMealsForUser } from '../mealRecommendations';
 import RecommendationList from './RecommendationList';
 import MealModal from './MealModal';
 
+const goalLabelToEnum = {
+  'Hidup Sehat': 'hidup_sehat',
+  'Diet': 'diet',
+  'Massa Otot': 'massa_otot'
+};
+
 const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
@@ -14,7 +20,8 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
   useEffect(() => {
     if (result && result.name) {
       loadAssessmentHistory();
-      const meals = getMealsForUser(result.goal, result.diseases || []);
+      const goalEnum = goalLabelToEnum[result.goal] || result.goal;
+      const meals = getMealsForUser(goalEnum, result.diseases || []);
       setRecommendedMeals(meals);
     }
   }, [result]);
