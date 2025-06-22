@@ -27,9 +27,9 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
     try {
       const response = await assessmentAPI.getRecommendations();
       if (response.success) {
-        const { mealPlan } = response.data || {};
-        const meals = mealPlan?.meals || [];
-        setRecommendedMeals(meals);
+        const { meals, mealPlan } = response.data || {};
+        const mealList = meals && meals.length > 0 ? meals : mealPlan?.meals || [];
+        setRecommendedMeals(mealList);
       }
     } catch (error) {
       console.error('Failed to load meal recommendations:', error);

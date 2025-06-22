@@ -33,7 +33,7 @@ test('getMealRecommendations calls generic endpoint', async () => {
 
 test('getRecommendations returns full JSON response', async () => {
   const meals = [{ id: 1 }, { id: 2 }];
-  const apiResponse = { success: true, data: { mealPlan: { meals } } };
+  const apiResponse = { success: true, data: { meals } };
   global.fetch.mockResolvedValueOnce({
     ok: true,
     json: () => Promise.resolve(apiResponse)
