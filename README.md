@@ -27,7 +27,7 @@ Aplikasi menggunakan arsitektur **frontend-backend sederhana**:
 - **Database**: MongoDB (opsional)
 - **Endpoints**:
   - `POST /api/v1/assessment` - Submit asesmen
-  - `GET /api/v1/recommendation/:userid` - Get rekomendasi
+  - `GET /api/v1/recommendation/:userid` - Rekomendasi berdasarkan asesmen terakhir
 
 ### Frontend
 - **Framework**: React + Vite
@@ -110,6 +110,7 @@ Backend akan mengubah nilai tersebut menjadi label yang lebih ramah pada respon 
 ```bash
 GET /api/v1/recommendation/:userid
 ```
+Mengembalikan `mealPlan`, `recommendations`, dan `restrictions` dari asesmen terakhir pengguna.
 
 ## 🗂️ Project Structure
 
