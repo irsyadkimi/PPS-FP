@@ -174,9 +174,9 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
         <div className="meal-recommendations-card">
           <h3>Rekomendasi Makanan</h3>
           <RecommendationList
-            meals={recommendedMeals}
+            goal={result.goal}
+            diseases={result.diseases}
             onSelect={setSelectedMeal}
-            goal={goalLabelToEnum[result.goal] || result.goal}
           />
         </div>
 
