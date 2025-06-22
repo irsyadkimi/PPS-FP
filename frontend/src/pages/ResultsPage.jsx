@@ -213,6 +213,16 @@ const ResultsPage = () => {
     );
   }
 
+  const result = assessmentData ? {
+    name: assessmentData.name,
+    ...assessmentData.results.analysis,
+    mealPlan: assessmentData.results.mealPlan,
+    recommendations: assessmentData.results.recommendations,
+    summary: assessmentData.results.summary,
+    healthScore: assessmentData.results.healthScore,
+    nextSteps: assessmentData.results.nextSteps,
+  } : null;
+
   // Success state
   return (
     <div className="results-page">
@@ -244,7 +254,7 @@ const ResultsPage = () => {
       {/* Results Content */}
       <div className="results-content">
         {assessmentData ? (
-          <ResultDisplay assessmentData={assessmentData} />
+          <ResultDisplay result={result} />
         ) : (
           <div className="no-data">
             <p>Data asesmen tidak tersedia</p>
