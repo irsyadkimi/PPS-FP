@@ -106,9 +106,9 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
           <h3>Indeks Massa Tubuh (BMI)</h3>
           <div className="bmi-display">
             <div className="bmi-value">
-              <span className="bmi-number">{result.results?.bmi?.toFixed(1)}</span>
-              <span className={`bmi-category ${getBMICategoryClass(result.results?.bmiCategory)}`}>
-                {result.results?.bmiCategory}
+              <span className="bmi-number">{result.results?.analysis?.bmi?.toFixed(1)}</span>
+              <span className={`bmi-category ${getBMICategoryClass(result.results?.analysis?.bmiCategory)}`}>
+                {result.results?.analysis?.bmiCategory}
               </span>
             </div>
           </div>
@@ -195,7 +195,7 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
                         {new Date(assessment.createdAt).toLocaleDateString('id-ID')}
                       </div>
                       <div className="history-details">
-                        <span>BMI: {assessment.results?.bmi?.toFixed(1)} ({assessment.results?.bmiCategory})</span>
+                        <span>BMI: {assessment.results?.analysis?.bmi?.toFixed(1)} ({assessment.results?.analysis?.bmiCategory})</span>
                         <span>Tujuan: {assessment.goal}</span>
                       </div>
                     </div>
