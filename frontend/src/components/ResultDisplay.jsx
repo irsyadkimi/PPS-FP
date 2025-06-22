@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { assessmentAPI } from '../services/api';
+import { assessmentAPI, apiUtils } from '../services/api';
 import RecommendationList from './RecommendationList';
 import MealModal from './MealModal';
 
@@ -16,7 +16,8 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
 
       const fetchRecommendations = async () => {
         try {
-          const response = await assessmentAPI.getRecommendations();
+          const userId = apiUtils.getUserId();
+          const response = await assessmentAPI.getRecommendations(userId);
           if (response.success) {
             // Expecting meals array under data.meals or similar structure
             const meals = response.data?.meals || [];
