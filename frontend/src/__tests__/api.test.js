@@ -31,14 +31,15 @@ test('getMealRecommendations calls generic endpoint', async () => {
   );
 });
 
-test('getRecommendations returns meals array from mealPlan', async () => {
+test('getRecommendations returns full JSON response', async () => {
   const meals = [{ id: 1 }, { id: 2 }];
+  const apiResponse = { success: true, data: { mealPlan: { meals } } };
   global.fetch.mockResolvedValueOnce({
     ok: true,
-    json: () => Promise.resolve({ success: true, data: { mealPlan: { meals } } })
+    json: () => Promise.resolve(apiResponse)
   });
 
   const result = await assessmentAPI.getRecommendations();
 
-  expect(result).toEqual(meals);
+  expect(result).toEqual(apiResponse);
 });
