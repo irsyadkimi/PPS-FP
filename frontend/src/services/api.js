@@ -76,7 +76,7 @@ export const assessmentAPI = {
   getRecommendations: async (userId) => {
     try {
       const id = userId || apiUtils.getUserId();
-      const endpoint = `${API_BASE_URL}/api/v1/recommendation/${id}`;
+      const endpoint = `${API_BASE_URL}/api/v1/recommendation/user/${id}`;
       const response = await fetch(endpoint, {
         method: 'GET',
         headers: apiUtils.createHeaders()
