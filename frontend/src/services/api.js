@@ -90,10 +90,6 @@ export const assessmentAPI = {
         throw new Error(data.message || 'Failed to get recommendations');
       }
 
-      if (data?.data?.mealPlan?.meals) {
-        return data.data.mealPlan.meals;
-      }
-
       return data;
     } catch (error) {
       return apiUtils.handleError(error);
