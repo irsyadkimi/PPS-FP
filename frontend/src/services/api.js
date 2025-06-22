@@ -1,5 +1,7 @@
 // frontend/src/services/api.js
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://217.15.160.69:5000';
+const API_BASE_URL =
+  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL) ||
+  'http://217.15.160.69:5000';
 
 // API utility functions
 export const apiUtils = {
@@ -86,6 +88,10 @@ export const assessmentAPI = {
 
       if (!response.ok) {
         throw new Error(data.message || 'Failed to get recommendations');
+      }
+
+      if (data?.data?.mealPlan?.meals) {
+        return data.data.mealPlan.meals;
       }
 
       return data;
