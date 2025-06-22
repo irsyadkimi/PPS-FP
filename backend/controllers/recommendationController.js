@@ -12,11 +12,37 @@ const getUserRecommendations = async (req, res) => {
       });
     }
 
-    const { mealPlan, recommendations, restrictions } = assessment.results || {};
+  const { mealPlan = {}, recommendations, restrictions } = assessment.results || {};
+
+    // Flatten meals array and provide defaults if empty
+    const meals = Array.isArray(mealPlan.meals) ? [...mealPlan.meals] : [];
+
+    if (meals.length === 0) {
+      meals.push(
+        {
+          id: 'default1',
+          name: 'Paket Sehat Harian',
+          description: 'Nasi merah, ayam panggang dan sayur bayam',
+          calories: 450
+        },
+        {
+          id: 'default2',
+          name: 'Salad Quinoa',
+          description: 'Quinoa dengan dada ayam dan sayuran segar',
+          calories: 350
+        },
+        {
+          id: 'default3',
+          name: 'Smoothie Protein',
+          description: 'Smoothie protein dengan buah dan sayur',
+          calories: 300
+        }
+      );
+    }
 
     res.status(200).json({
       success: true,
-      data: { mealPlan, recommendations, restrictions }
+      data: { meals, mealPlan, recommendations, restrictions }
     });
   } catch (error) {
     res.status(500).json({
