@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { assessmentAPI } from '../services/api';
+import { getMealsForUser } from '../mealRecommendations';
+import RecommendationList from './RecommendationList';
+import MealModal from './MealModal';
 
 const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [recommendedMeals, setRecommendedMeals] = useState([]);
+  const [selectedMeal, setSelectedMeal] = useState(null);
 
   useEffect(() => {
     if (result && result.name) {
       loadAssessmentHistory();
+      const meals = getMealsForUser(result.goal, result.diseases || []);
+      setRecommendedMeals(meals);
     }
   }, [result]);
 
@@ -42,12 +49,6 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
     return '#f44336';
   };
 
-  const sampleFoods = React.useMemo(() => {
-    if (!result?.mealPlan?.meals) return [];
-    const foods = result.mealPlan.meals.flatMap(m => m.suggestions || []);
-    const unique = Array.from(new Set(foods));
-    return unique.slice(0, 4);
-  }, [result]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -78,14 +79,10 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
         <p>Halo <strong>{result.name}</strong>, berikut analisis kesehatan Anda</p>
       </div>
 
-      {sampleFoods.length > 0 && (
-        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-          <h3>Rekomendasi Makanan</h3>
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {sampleFoods.map((food, idx) => (
-              <li key={idx}>{food}</li>
-            ))}
-          </ul>
+      {recommendedMeals.length > 0 && (
+        <div style={{ marginBottom: '24px' }}>
+          <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>Rekomendasi Makanan</h3>
+          <RecommendationList meals={recommendedMeals} onSelect={setSelectedMeal} />
         </div>
       )}
 
@@ -273,6 +270,8 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
       <div className="disclaimer">
         <p>⚠️ <strong>Penting:</strong> Hasil assessment ini bersifat informatif dan tidak menggantikan konsultasi medis profesional. Untuk kondisi kesehatan khusus, disarankan berkonsultasi dengan dokter atau ahli gizi.</p>
       </div>
+
+      <MealModal meal={selectedMeal} onClose={() => setSelectedMeal(null)} />
     </div>
   );
 };

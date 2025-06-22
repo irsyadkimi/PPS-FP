@@ -219,6 +219,8 @@ const ResultsPage = () => {
 
   const result = assessmentData ? {
     name: assessmentData.name,
+    goal: assessmentData.goal,
+    diseases: assessmentData.diseases,
     ...assessmentData.results.analysis,
     mealPlan: assessmentData.results.mealPlan,
     recommendations: assessmentData.results.recommendations,
