@@ -27,8 +27,8 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
     try {
       const response = await assessmentAPI.getRecommendations();
       if (response.success) {
-        // Expecting meals array under data.meals or similar structure
-        const meals = response.data?.meals || [];
+        const { mealPlan } = response.data || {};
+        const meals = mealPlan?.meals || [];
         setRecommendedMeals(meals);
       }
     } catch (error) {
@@ -158,9 +158,9 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
         {/* Meal Recommendations */}
         <div className="meal-recommendations-card">
           <h3>Rekomendasi Makanan</h3>
-          <RecommendationList 
+          <RecommendationList
             meals={recommendedMeals}
-            onSelectMeal={setSelectedMeal}
+            onSelect={setSelectedMeal}
           />
         </div>
 
