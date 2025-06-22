@@ -118,9 +118,9 @@ app.get('/api', (req, res) => {
       },
       recommendation: {
         get: 'GET /api/v1/recommendation',
-        getById: 'GET /api/v1/recommendation/:mealId',
+        getById: 'GET /api/v1/recommendation/meal/:mealId',
         filter: 'POST /api/v1/recommendation/filter',
-        user: 'GET /api/v1/recommendation/:userId'
+        user: 'GET /api/v1/recommendation/user/:userId'
       },
       user: {
         profile: 'GET /api/v1/user/profile',

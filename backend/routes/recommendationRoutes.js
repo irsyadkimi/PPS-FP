@@ -65,11 +65,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/v1/recommendation/:userId - Get recommendations for a user
-router.get('/:userId', recommendationController.getUserRecommendations);
-
-// GET /api/v1/recommendation/:mealId - Get specific meal details
-router.get('/:mealId', async (req, res) => {
+// GET /api/v1/recommendation/meal/:mealId - Get specific meal details
+router.get('/meal/:mealId', async (req, res) => {
   try {
     const { mealId } = req.params;
     
@@ -115,6 +112,9 @@ router.get('/:mealId', async (req, res) => {
     });
   }
 });
+
+// GET /api/v1/recommendation/user/:userId - Get recommendations for a user
+router.get('/user/:userId', recommendationController.getUserRecommendations);
 
 // POST /api/v1/recommendation/filter - Filter recommendations
 router.post('/filter', async (req, res) => {
