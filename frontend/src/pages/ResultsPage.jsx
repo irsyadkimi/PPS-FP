@@ -73,6 +73,10 @@ const ResultsPage = () => {
     navigate('/assessment');
   };
 
+  const handleGoToMenu = () => {
+    navigate('/recommendations');
+  };
+
   // Loading state
   if (loading) {
     return (
@@ -254,7 +258,11 @@ const ResultsPage = () => {
       {/* Results Content */}
       <div className="results-content">
         {assessmentData ? (
-          <ResultDisplay result={result} />
+          <ResultDisplay
+            result={result}
+            onBackToAssessment={handleNewAssessment}
+            onGoToMenu={handleGoToMenu}
+          />
         ) : (
           <div className="no-data">
             <p>Data asesmen tidak tersedia</p>

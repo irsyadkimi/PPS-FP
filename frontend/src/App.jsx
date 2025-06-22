@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import HomePage from '@/pages/HomePage';
 import AssessmentPage from '@/pages/AssessmentPage';
 import ResultsPage from '@/pages/ResultsPage';
+import RecommendationsPage from '@/pages/RecommendationsPage';
 import HistoryPage from '@/pages/HistoryPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 
@@ -33,6 +34,7 @@ function App() {
               {/* Assessment Flow */}
               <Route path="/assessment" element={<AssessmentPage />} />
               <Route path="/results/:assessmentId" element={<ResultsPage />} />
+              <Route path="/recommendations" element={<RecommendationsPage />} />
               
               {/* User History */}
               <Route path="/history" element={<HistoryPage />} />
