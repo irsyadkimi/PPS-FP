@@ -43,6 +43,26 @@ const staticMeals = {
     ]
   },
   hidup_sehat: {
+    diabetes: [
+      'Nasi merah + tumis buncis',
+      'Ayam kukus tanpa kulit',
+      'Smoothie sayur rendah gula'
+    ],
+    hipertensi: [
+      'Sup bening bayam',
+      'Ikan panggang tanpa garam',
+      'Tempe kukus + brokoli'
+    ],
+    kolesterol: [
+      'Tumis tahu + sayur hijau',
+      'Nasi merah + ikan kukus',
+      'Sup labu tanpa santan'
+    ],
+    asam_urat: [
+      'Salad sayur segar',
+      'Ayam rebus + wortel',
+      'Smoothie buah rendah purin'
+    ],
     none: [
       'Nasi merah + tempe goreng kering',
       'Omelet sayur',
