@@ -25,7 +25,7 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
 
   const fetchRecommendations = async () => {
     try {
-      const response = await assessmentAPI.getRecommendations();
+      const response = await assessmentAPI.getRecommendations(result?.userId);
       if (response.success) {
         const { meals, mealPlan } = response.data || {};
         const mealList = meals && meals.length > 0 ? meals : mealPlan?.meals || [];
@@ -176,6 +176,7 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
           <RecommendationList
             goal={result.goal}
             diseases={result.diseases}
+            meals={recommendedMeals}
             onSelect={setSelectedMeal}
           />
         </div>
