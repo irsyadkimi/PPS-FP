@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { assessmentAPI } from '../services/api';
-import { getMealsForUser } from '../mealRecommendations';
 import RecommendationList from './RecommendationList';
 import MealModal from './MealModal';
 
@@ -14,8 +13,21 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
   useEffect(() => {
     if (result && result.name) {
       loadAssessmentHistory();
-      const meals = getMealsForUser(result.goal, result.diseases || []);
-      setRecommendedMeals(meals);
+
+      const fetchRecommendations = async () => {
+        try {
+          const response = await assessmentAPI.getRecommendations();
+          if (response.success) {
+            // Expecting meals array under data.meals or similar structure
+            const meals = response.data?.meals || [];
+            setRecommendedMeals(meals);
+          }
+        } catch (error) {
+          console.error('Failed to load meal recommendations:', error);
+        }
+      };
+
+      fetchRecommendations();
     }
   }, [result]);
 
