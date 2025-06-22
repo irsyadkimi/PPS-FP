@@ -29,7 +29,22 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
       if (response.success) {
         const { meals, mealPlan } = response.data || {};
         const mealList = meals && meals.length > 0 ? meals : mealPlan?.meals || [];
-        setRecommendedMeals(mealList);
+
+        const goalKey = goalLabelToEnum[result.goal] || result.goal;
+        const packageMap = {
+          hidup_sehat: 'Paket Sehat Harian',
+          diet: 'Paket Diet Rendah Kalori',
+          massa_otot: 'Paket Protein Tinggi'
+        };
+
+        let filteredList = mealList;
+        if (packageMap[goalKey]) {
+          filteredList = mealList.filter(
+            (m) => m.name === packageMap[goalKey] || m.packageName === packageMap[goalKey]
+          );
+        }
+
+        setRecommendedMeals(filteredList.slice(0, 3));
       }
     } catch (error) {
       console.error('Failed to load meal recommendations:', error);
