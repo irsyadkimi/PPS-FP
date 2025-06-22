@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { assessmentAPI } from '../services/api';
-import { getMealsForUser } from '../mealRecommendations';
 import RecommendationList from './RecommendationList';
 import MealModal from './MealModal';
 
@@ -20,11 +19,22 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
   useEffect(() => {
     if (result && result.name) {
       loadAssessmentHistory();
-      const goalEnum = goalLabelToEnum[result.goal] || result.goal;
-      const meals = getMealsForUser(goalEnum, result.diseases || []);
-      setRecommendedMeals(meals);
+      fetchRecommendations();
     }
   }, [result]);
+
+  const fetchRecommendations = async () => {
+    try {
+      const response = await assessmentAPI.getRecommendations();
+      if (response.success) {
+        // Expecting meals array under data.meals or similar structure
+        const meals = response.data?.meals || [];
+        setRecommendedMeals(meals);
+      }
+    } catch (error) {
+      console.error('Failed to load meal recommendations:', error);
+    }
+  };
 
   const loadAssessmentHistory = async () => {
     setLoadingHistory(true);
@@ -50,235 +60,176 @@ const ResultDisplay = ({ result, onBackToAssessment, onGoToMenu }) => {
     }
   };
 
-  const getHealthScoreColor = (score) => {
-    if (score >= 80) return '#4CAF50';
-    if (score >= 60) return '#FF9800';
-    return '#f44336';
-  };
-
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('id-ID', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  if (!result) {
-    return (
-      <div className="result-display">
-        <div className="result-error">
-          <h2>❌ Tidak ada hasil untuk ditampilkan</h2>
-          <button className="btn btn-primary" onClick={onBackToAssessment}>
-            Kembali ke Assessment
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="result-display">
       <div className="result-header">
-        <h1>📊 Hasil Assessment Anda</h1>
-        <p>Halo <strong>{result.name}</strong>, berikut analisis kesehatan Anda</p>
+        <h2>Hasil Asesmen Diet Anda</h2>
+        <p>Berikut adalah analisis dan rekomendasi berdasarkan data yang Anda berikan:</p>
       </div>
 
-      {recommendedMeals.length > 0 && (
-        <div style={{ marginBottom: '24px' }}>
-          <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>Rekomendasi Makanan</h3>
-          <RecommendationList meals={recommendedMeals} onSelect={setSelectedMeal} />
-        </div>
-      )}
-
-      {/* BMI Card */}
-      <div className="result-card bmi-card">
-        <div className="card-header">
-          <h2>📏 Indeks Massa Tubuh (BMI)</h2>
-        </div>
-        <div className="bmi-display">
-          <div className="bmi-value">{result.bmi}</div>
-          <div className={`bmi-category ${getBMICategoryClass(result.bmiCategory)}`}>
-            {result.bmiCategory}
+      <div className="result-content">
+        {/* User Info Section */}
+        <div className="user-info-card">
+          <h3>Informasi Pribadi</h3>
+          <div className="info-grid">
+            <div className="info-item">
+              <span className="label">Nama:</span>
+              <span className="value">{result.name}</span>
+            </div>
+            <div className="info-item">
+              <span className="label">Umur:</span>
+              <span className="value">{result.personalData?.age} tahun</span>
+            </div>
+            <div className="info-item">
+              <span className="label">Berat Badan:</span>
+              <span className="value">{result.personalData?.weight} kg</span>
+            </div>
+            <div className="info-item">
+              <span className="label">Tinggi Badan:</span>
+              <span className="value">{result.personalData?.height} cm</span>
+            </div>
+            <div className="info-item">
+              <span className="label">Tujuan:</span>
+              <span className="value">{result.goal}</span>
+            </div>
+            {result.diseases && result.diseases.length > 0 && (
+              <div className="info-item">
+                <span className="label">Riwayat Penyakit:</span>
+                <span className="value">{result.diseases.join(', ')}</span>
+              </div>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Health Score Card */}
-      {result.healthScore && (
-        <div className="result-card health-score-card">
-          <div className="card-header">
-            <h2>💚 Skor Kesehatan</h2>
-          </div>
-          <div className="health-score">
-            <div 
-              className="score-circle"
-              style={{ '--score-color': getHealthScoreColor(result.healthScore) }}
-            >
-              <div className="score-value">{result.healthScore}</div>
-              <div className="score-label">dari 100</div>
+        {/* BMI Section */}
+        <div className="bmi-card">
+          <h3>Indeks Massa Tubuh (BMI)</h3>
+          <div className="bmi-display">
+            <div className="bmi-value">
+              <span className="bmi-number">{result.results?.bmi?.toFixed(1)}</span>
+              <span className={`bmi-category ${getBMICategoryClass(result.results?.bmiCategory)}`}>
+                {result.results?.bmiCategory}
+              </span>
             </div>
           </div>
         </div>
-      )}
 
-      {/* Recommendations Card */}
-      {result.recommendations && (
-        <div className="result-card recommendations-card">
-          <div className="card-header">
-            <h2>🎯 Rekomendasi Personal</h2>
-          </div>
-          <div className="recommendations">
-            {result.recommendations.primary && result.recommendations.primary.length > 0 && (
-              <div className="recommendation-section">
-                <h3>🌟 Rekomendasi Utama</h3>
-                <ul className="recommendation-list">
-                  {result.recommendations.primary.map((rec, index) => (
-                    <li key={index}>{rec}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {result.recommendations.dietary && result.recommendations.dietary.length > 0 && (
-              <div className="recommendation-section">
-                <h3>🍽️ Rekomendasi Diet</h3>
-                <ul className="recommendation-list">
-                  {result.recommendations.dietary.map((rec, index) => (
-                    <li key={index}>{rec}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {result.recommendations.lifestyle && result.recommendations.lifestyle.length > 0 && (
-              <div className="recommendation-section">
-                <h3>🏃‍♂️ Rekomendasi Gaya Hidup</h3>
-                <ul className="recommendation-list">
-                  {result.recommendations.lifestyle.map((rec, index) => (
-                    <li key={index}>{rec}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Meal Plan Card */}
-      {result.mealPlan && (
-        <div className="result-card meal-plan-card">
-          <div className="card-header">
-            <h2>📅 Rencana Makan Harian</h2>
-            <p>Target Kalori: <strong>{result.mealPlan.totalCalories} kkal/hari</strong></p>
-          </div>
-          <div className="meal-plan">
-            {result.mealPlan.meals?.map((meal, index) => (
-              <div key={index} className="meal-item">
-                <h4>{meal.time}</h4>
-                <p><strong>{meal.targetCalories} kkal</strong></p>
-                {meal.suggestions && meal.suggestions.length > 0 && (
-                  <ul className="meal-suggestions">
-                    {meal.suggestions.map((suggestion, idx) => (
-                      <li key={idx}>{suggestion}</li>
+        {/* Recommendations Section */}
+        <div className="recommendations-card">
+          <h3>Rekomendasi Diet</h3>
+          {result.results?.recommendations && (
+            <div className="recommendations-content">
+              {result.results.recommendations.primary && (
+                <div className="rec-section">
+                  <h4>Rekomendasi Utama:</h4>
+                  <ul>
+                    {result.results.recommendations.primary.map((rec, index) => (
+                      <li key={index}>{rec}</li>
                     ))}
                   </ul>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+                </div>
+              )}
 
-      {/* Summary Card */}
-      {result.summary && (
-        <div className="result-card summary-card">
-          <div className="card-header">
-            <h2>📝 Ringkasan</h2>
-          </div>
-          <div className="summary">
-            <p>{result.summary}</p>
-          </div>
-        </div>
-      )}
+              {result.results.recommendations.dietary && (
+                <div className="rec-section">
+                  <h4>Panduan Makanan:</h4>
+                  <ul>
+                    {result.results.recommendations.dietary.map((rec, index) => (
+                      <li key={index}>{rec}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-      {/* Assessment History */}
-      <div className="result-card history-card">
-        <div className="card-header">
-          <h2>📈 Riwayat Assessment</h2>
+              {result.results.recommendations.lifestyle && (
+                <div className="rec-section">
+                  <h4>Gaya Hidup:</h4>
+                  <ul>
+                    {result.results.recommendations.lifestyle.map((rec, index) => (
+                      <li key={index}>{rec}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Meal Recommendations */}
+        <div className="meal-recommendations-card">
+          <h3>Rekomendasi Makanan</h3>
+          <RecommendationList 
+            meals={recommendedMeals}
+            onSelectMeal={setSelectedMeal}
+          />
+        </div>
+
+        {/* Summary Section */}
+        {result.results?.summary && (
+          <div className="summary-card">
+            <h3>Ringkasan</h3>
+            <p>{result.results.summary}</p>
+          </div>
+        )}
+
+        {/* Assessment History Toggle */}
+        <div className="history-section">
           <button 
-            className="btn btn-outline"
+            className="toggle-history-btn"
             onClick={() => setShowHistory(!showHistory)}
             disabled={loadingHistory}
           >
-            {loadingHistory ? '⏳ Loading...' : showHistory ? 'Sembunyikan' : 'Lihat Riwayat'}
+            {loadingHistory ? 'Memuat...' : showHistory ? 'Sembunyikan Riwayat' : 'Lihat Riwayat Asesmen'}
           </button>
-        </div>
-        
-        {showHistory && (
-          <div className="history-content">
-            {history.length === 0 ? (
-              <p className="no-history">Ini adalah assessment pertama Anda! 🎉</p>
-            ) : (
-              <div className="history-list">
-                {history.map((item, index) => (
-                  <div key={item.id} className="history-item">
-                    <div className="history-date">
-                      <strong>{item.date}</strong>
-                      <span>{item.time}</span>
-                    </div>
-                    <div className="history-data">
-                      <span className={`history-bmi ${getBMICategoryClass(item.category)}`}>
-                        BMI: {item.bmi}
-                      </span>
-                      <span className="history-goal">{item.goal}</span>
-                      {item.healthScore && (
-                        <span className="history-score">
-                          Skor: {item.healthScore}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
 
-      {/* Action Buttons */}
-      <div className="result-actions">
-        <button 
-          className="btn btn-primary btn-large"
-          onClick={onGoToMenu}
-        >
-          🍽️ Lihat Menu Makanan Sehat & Order
-        </button>
-        
-        <div className="secondary-actions">
+          {showHistory && (
+            <div className="history-content">
+              <h4>Riwayat Asesmen</h4>
+              {history.length === 0 ? (
+                <p>Belum ada riwayat asesmen sebelumnya.</p>
+              ) : (
+                <div className="history-list">
+                  {history.map((assessment, index) => (
+                    <div key={assessment._id || index} className="history-item">
+                      <div className="history-date">
+                        {new Date(assessment.createdAt).toLocaleDateString('id-ID')}
+                      </div>
+                      <div className="history-details">
+                        <span>BMI: {assessment.results?.bmi?.toFixed(1)} ({assessment.results?.bmiCategory})</span>
+                        <span>Tujuan: {assessment.goal}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="action-buttons">
           <button 
-            className="btn btn-outline"
+            className="btn btn-secondary"
             onClick={onBackToAssessment}
           >
-            🔄 Assessment Ulang
+            Asesmen Ulang
           </button>
           <button 
-            className="btn btn-outline"
-            onClick={() => window.print()}
+            className="btn btn-primary"
+            onClick={onGoToMenu}
           >
-            🖨️ Cetak Hasil
+            Lihat Menu Makanan
           </button>
         </div>
       </div>
 
-      {/* Disclaimer */}
-      <div className="disclaimer">
-        <p>⚠️ <strong>Penting:</strong> Hasil assessment ini bersifat informatif dan tidak menggantikan konsultasi medis profesional. Untuk kondisi kesehatan khusus, disarankan berkonsultasi dengan dokter atau ahli gizi.</p>
-      </div>
-
-      <MealModal meal={selectedMeal} onClose={() => setSelectedMeal(null)} />
+      {/* Meal Modal */}
+      {selectedMeal && (
+        <MealModal 
+          meal={selectedMeal}
+          onClose={() => setSelectedMeal(null)}
+        />
+      )}
     </div>
   );
 };
