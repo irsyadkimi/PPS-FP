@@ -1,4 +1,4 @@
-# Diet Assessment App - PPS Final Project
+# Diet Apps
 
 🥗 **Aplikasi Asesmen Diet untuk Personalisasi Makanan**
 
