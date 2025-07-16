@@ -1,4 +1,4 @@
-# Diet Apps
+# Aplikasi Diet
 
 🥗 **Aplikasi Asesmen Diet untuk Personalisasi Makanan**
 
